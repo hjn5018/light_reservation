@@ -40,9 +40,9 @@
 
 ## 3. 실제 라즈베리 파이 배포 가이드
 
-실제 기기 배포 및 상호 연동을 추진하기 위해 아래 단계를 따르십시오.
+실제 기기 배포 및 상호 연동을 추진하기 위해 하드웨어를 결선한 뒤, `setup.sh` 자동 설치 스크립트를 사용하여 간편하게 배포할 수 있습니다.
 
-### STEP 1: 하드웨어 결선
+### STEP 1: 하드웨어 결선 (Pi B 공통)
 - **LED (단색 LED 3개) 연결**:
   - 초록 LED ➔ GPIO 17 (220Ω 저항 직렬 연결)
   - 노랑 LED ➔ GPIO 27 (220Ω 저항 직렬 연결)
@@ -54,32 +54,53 @@
   - SCL ➔ GPIO 3 (SCL)
   - VCC ➔ 5V 단자, GND ➔ GND 단자
 
-### STEP 2: Pi B (Flask + Socket 서버) 구성
+### STEP 2: 자동 원스톱 배포 (setup.sh 사용)
+
+각 라즈베리 파이에 접속한 후, 터미널에서 다음 명령어를 실행하여 원클릭으로 구성을 마칠 수 있습니다.
+
+```bash
+# 1. 깃 클론으로 소스 받기
+git clone https://github.com/hjn5018/light_reservation.git
+cd light_reservation
+
+# 2. 자동 빌드/배포 스크립트 실행
+sudo bash setup.sh
+```
+
+- **Pi A (Apache + CGI) 설정 시**: 
+  - 선택 메뉴에서 `1`번을 선택합니다.
+  - 연동할 **Pi B의 IP 주소**를 입력하면 CGI 스크립트 내부에 자동 반영되고, 웹 리소스 복사 및 CGI 실행 권한 설정이 한번에 완료됩니다.
+- **Pi B (Flask + 소켓 + 하드웨어) 설정 시**: 
+  - 선택 메뉴에서 `2`번을 선택합니다.
+  - 필수 하드웨어 라이브러리(RPi.GPIO, smbus)가 자동 설치되며, 백그라운드 구동을 위한 **systemd 백그라운드 서비스(`reservation_pib.service`)**로 등록 및 즉시 가동됩니다.
+
+---
+
+## 4. 수동 배포 가이드 (참고용)
+(자동 스크립트를 사용하지 않고 배포하려면 아래 절차를 직접 실행해 주세요.)
+
+### Pi B (Flask + Socket 서버) 수동 구성
 1. Pi B 터미널에서 라이브러리 설치:
    ```bash
    sudo apt-get update
    sudo apt-get install python3-rpi.gpio python3-smbus
-   pip3 install -r requirements.txt
+   pip3 install -r pi_b_flask/requirements.txt
    ```
 2. I2C 인터페이스 활성화:
    ```bash
-   sudo raspi-config
-   # Interface Options -> I2C -> Enable 활성화 후 재부팅
+   sudo raspi-config # Interface Options -> I2C 활성화
    ```
-3. 백그라운드로 애플리케이션 시작:
+3. 백그라운드로 애플리케이션 구동:
    ```bash
    python3 pi_b_flask/app.py
    ```
 
-### STEP 3: Pi A (Apache + CGI) 구성
+### Pi A (Apache + CGI) 수동 구성
 1. Apache2 설치 및 CGI 모듈 활성화:
    ```bash
-   sudo apt-get install apache2
-   sudo a2enmod cgi
-   sudo systemctl restart apache2
+   sudo apt-get install apache2 && sudo a2enmod cgi && sudo systemctl restart apache2
    ```
 2. 파일 배치:
    - `pi_a_apache/index.html` 및 `app.js` ➔ `/var/www/html/` 경로 복사
-   - `pi_a_apache/api/update_status.py` ➔ `/usr/lib/cgi-bin/` (또는 CGI 실행 권한이 인가된 `/var/www/html/api/` 경로) 복사 후 실행 권한 부여 (`chmod +x update_status.py`)
-3. Pi B의 IP 주소 설정:
-   - `pi_a_apache/api/update_status.py` 파일 내의 `PI_B_IP = '127.0.0.1'` 부분을 실제 Pi B의 IP 주소(예: `'192.168.0.x'`)로 수정하거나 환경변수 `PI_B_IP`를 설정하십시오.
+   - `pi_a_apache/api/update_status.py` ➔ `/usr/lib/cgi-bin/` 또는 `/var/www/html/api/` 경로 복사 및 실행 권한 인가 (`chmod +x`)
+
