@@ -96,7 +96,7 @@ setup_pi_b() {
   apt-get install -y python3-pip python3-rpi.gpio python3-smbus i2c-tools
   
   # 2. 파이썬 의존성 패키지 설치
-  echo -e "${BLUE}2/3. Python 의존성 라이브러리 설치 (Flask)...${NC}"
+  echo -e "${BLUE}2/3. Python 의존성 라이브러리 설치 (Flask, RPLCD, smbus2)...${NC}"
   pip3 install -r "${PROJECT_DIR}/pi_b_flask/requirements.txt" --break-system-packages 2>/dev/null || pip3 install -r "${PROJECT_DIR}/pi_b_flask/requirements.txt"
   
   # 3. Systemd 서비스 등록 (백그라운드 자동 실행용)

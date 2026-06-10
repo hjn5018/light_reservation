@@ -2,7 +2,7 @@
 
 - [x] **Phase 1: 하드웨어 모듈 구현 (Pi B)**
   - [x] [led.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/hardware/led.py) 구현 (LED 제어 및 폴백 로직)
-  - [x] [lcd.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/hardware/lcd.py) 구현 (LCD 제어 및 폴백 로직)
+  - [x] [lcd.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/hardware/lcd.py) 구현 (RPLCD 기반 I2C/GPIO 듀얼 모드 제어 및 폴백 로직)
   - [x] [buzzer.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/hardware/buzzer.py) 구현 (Buzzer 3음계 알림 및 폴백 로직)
   - [x] [test_hardware.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/tests/test_hardware.py) 테스트 스크립트 작성 및 독립 테스트
 

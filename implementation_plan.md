@@ -68,13 +68,13 @@ light_reservation/
 │
 └── pi_b_flask/             # Pi B (Flask 및 하드웨어 제어용 소스 코드)
     ├── app.py              # Flask 앱 및 소켓 리스너 스레드 동작
-    ├── config.py           # GPIO 핀 맵핑 및 설정 값
+    ├── config.py           # GPIO 및 LCD 핀 맵핑 및 설정 값
     ├── hardware/           # 하드웨어 제어 모듈
     │   ├── __init__.py
     │   ├── led.py          # RGB LED 또는 개별 LED 제어
-    │   ├── lcd.py          # I2C 16x2 LCD 제어
+    │   ├── lcd.py          # I2C & GPIO 16x2 LCD 제어 (RPLCD 기반)
     │   └── buzzer.py       # 피에조 부저 멜로디 제어
-    └── requirements.txt    # 의존성 패키지 (RPi.GPIO, Flask, Flask-SocketIO 등)
+    └── requirements.txt    # 의존성 패키지 (RPi.GPIO, RPLCD, smbus2, Flask 등)
 ```
 
 ### 2.3 하드웨어 회로 구성안 (예시)
@@ -119,7 +119,7 @@ light_reservation/
 
 ### Phase 1: 하드웨어 모듈 구현 (Pi B)
 - [ ] `hardware/led.py` 구현 및 개별/RGB LED 제어 기능 작성
-- [ ] `hardware/lcd.py` 구현 및 I2C LCD 상태 텍스트 표시 기능 작성
+- [ ] `hardware/lcd.py` 구현 및 I2C/GPIO LCD 상태 텍스트 표시 기능 작성 (RPLCD 기반)
 - [ ] `hardware/buzzer.py` 구현 및 PWM을 이용한 3음계 알림음 기능 작성
 - [ ] 하드웨어 통합 테스트 스크립트 작성 및 동작 확인
 

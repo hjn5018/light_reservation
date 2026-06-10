@@ -15,9 +15,20 @@ LED_RED_PIN = 22
 # 2. 패시브 부저 (Passive Buzzer) 핀
 BUZZER_PIN = 18
 
-# 3. I2C LCD 설정 (보통 I2C 주소는 0x27 또는 0x3f)
+# 3. LCD 설정 (I2C 또는 GPIO 직결)
+LCD_MODE = 'I2C'  # 'I2C' 또는 'GPIO'
 LCD_I2C_ADDRESS = 0x27
 LCD_WIDTH = 16  # 한 줄당 글자 수
+
+# GPIO 직결 모드 시의 BCM 핀 정의
+LCD_PINS = {
+    "rs": 26,
+    "e": 19,
+    "d4": 13,
+    "d5": 6,
+    "d6": 5,
+    "d7": 11
+}
 
 # 환경 감지 및 Dummy 모드 여부 설정
 # RPi.GPIO 및 smbus(I2C LCD용) 라이브러리가 없거나, 리눅스(라즈베리파이)가 아닐 경우 자동으로 Dummy 드라이버 작동
