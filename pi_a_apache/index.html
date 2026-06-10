@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="라즈베리파이 2대 기반의 스마트 공간/장비 실시간 예약 시스템 컨트롤 센터">
+    <title>Smart Reservation System</title>
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Sleek Color Palette */
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --glass-bg: rgba(30, 41, 59, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            
+            /* Status Colors */
+            --color-idle: #10b981;        /* Emerald Green */
+            --color-reserved: #f59e0b;    /* Warm Amber */
+            --color-in-use: #ef4444;      /* Crimson Red */
+            
+            /* Glow effects */
+            --glow-idle: 0 0 25px rgba(16, 185, 129, 0.4);
+            --glow-reserved: 0 0 25px rgba(245, 158, 11, 0.4);
+            --glow-in-use: 0 0 25px rgba(239, 68, 68, 0.4);
+            
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient glowing backgrounds in layout */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        body::before { top: -10%; left: -10%; }
+        body::after { bottom: -10%; right: -10%; }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 2.5rem;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Header design */
+        header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        /* Glassmorphism Status Card */
+        .status-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--color-idle); /* Will be updated via JS */
+            transition: var(--transition-smooth);
+        }
+
+        .status-badge-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+            position: relative;
+            transition: var(--transition-smooth);
+        }
+
+        .status-icon {
+            font-size: 3rem;
+            color: var(--color-idle);
+            transition: var(--transition-smooth);
+            filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));
+        }
+
+        .status-title {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .status-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            transition: var(--transition-smooth);
+        }
+
+        /* Interactive Control Panel */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.5rem 1rem;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .btn i {
+            font-size: 1.5rem;
+            transition: var(--transition-smooth);
+        }
+
+        /* Hover & Active states with rich aesthetics */
+        .btn-idle:hover {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--color-idle);
+            box-shadow: var(--glow-idle);
+        }
+        .btn-idle:hover i {
+            color: var(--color-idle);
+            transform: scale(1.1);
+        }
+
+        .btn-reserved:hover {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: var(--color-reserved);
+            box-shadow: var(--glow-reserved);
+        }
+        .btn-reserved:hover i {
+            color: var(--color-reserved);
+            transform: scale(1.1);
+        }
+
+        .btn-in-use:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: var(--color-in-use);
+            box-shadow: var(--glow-in-use);
+        }
+        .btn-in-use:hover i {
+            color: var(--color-in-use);
+            transform: scale(1.1);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        /* Audio Alert Popups / Indicators for buzzer actions */
+        .buzzer-alert {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #a5b4fc;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: var(--transition-smooth);
+            pointer-events: none;
+        }
+
+        .buzzer-alert.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Wave animation for sound alert */
+        .wave-bar {
+            width: 3px;
+            height: 12px;
+            background-color: #818cf8;
+            border-radius: 3px;
+            animation: bounce 0.6s infinite ease-in-out alternate;
+        }
+        .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            from { height: 4px; }
+            to { height: 16px; }
+        }
+
+        /* Footer info */
+        footer {
+            margin-top: auto;
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 600px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>CONTROL CENTER</h1>
+            <p>Pi A (Apache) ➔ Pi B (Flask) Socket Integration</p>
+        </header>
+
+        <!-- Current Status Display Card -->
+        <main class="status-card" id="statusCard">
+            <div class="status-badge-container" id="statusBadge">
+                <i class="fa-solid fa-circle-check status-icon" id="statusIcon"></i>
+            </div>
+            <div class="status-title">Current System State</div>
+            <div class="status-value" id="statusValue">대기 (AVAILABLE)</div>
+
+            <!-- Buzzer Melody Alert Overlay -->
+            <div class="buzzer-alert" id="buzzerAlert">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <span id="buzzerText">Buzzer Alert Ringing</span>
+            </div>
+        </main>
+
+        <!-- Command Control Buttons -->
+        <section class="controls">
+            <button class="btn btn-idle" id="btnIdle" onclick="updateState('idle')">
+                <i class="fa-solid fa-circle-play"></i>
+                <span>대기 등록</span>
+            </button>
+            <button class="btn btn-reserved" id="btnReserved" onclick="updateState('reserved')">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <span>공간 예약</span>
+            </button>
+            <button class="btn btn-in-use" id="btnInUse" onclick="updateState('in_use')">
+                <i class="fa-solid fa-user-lock"></i>
+                <span>사용 시작</span>
+            </button>
+        </section>
+    </div>
+
+    <footer>
+        <p><i class="fa-solid fa-server"></i> Pi A (Apache + CGI) | <i class="fa-solid fa-microchip"></i> Pi B (Flask + Socket)</p>
+        <p style="margin-top: 0.5rem; opacity: 0.6;">&copy; 2026 Reservation IoT Solution. All rights reserved.</p>
+    </footer>
+
+    <!-- Frontend logic linkage -->
+    <script src="app.js"></script>
+</body>
+</html>
