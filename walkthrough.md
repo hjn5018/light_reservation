@@ -9,28 +9,28 @@
 프로젝트 루트 디렉토리 아래에 아래와 같이 Pi A(Apache)와 Pi B(Flask)로 디렉토리를 분리하여 작업 공간을 구성했습니다.
 
 ### 1.1 Pi B (Flask & Hardware Control)
-- [config.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/config.py): GPIO 및 LCD 핀 정보, 소켓 포트 설정 및 플랫폼 감지(더미 폴백 작동용) 파일입니다.
-- [hardware/led.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/hardware/led.py): 초록/노랑/빨강 LED 3개 점등을 상태별로 맵핑 제어합니다.
-- [hardware/lcd.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/hardware/lcd.py): RPLCD 라이브러리 기반 16x2 LCD 드라이버 모듈(I2C 및 GPIO 듀얼 모드 지원)로 터미널 가상 화면 렌더링 기능을 포함합니다.
-- [hardware/buzzer.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/hardware/buzzer.py): 패시브 부저 PWM을 이용한 상승(도-미-솔) / 하강(솔-미-도) 3음계 연주 클래스입니다.
-- [app.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/app.py): 백그라운드 TCP 소켓 리스너 스레드와 모니터링용 Flask REST API를 동시에 구동하는 메인 스크립트입니다.
-- [requirements.txt](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/requirements.txt): 필요한 파이썬 라이브러리(Flask, RPLCD, smbus2 등) 의존성 파일입니다.
+- [config.py]: GPIO 및 LCD 핀 정보, 소켓 포트 설정 및 플랫폼 감지(더미 폴백 작동용) 파일입니다.
+- [hardware/led.py]: 초록/노랑/빨강 LED 3개 점등을 상태별로 맵핑 제어합니다.
+- [hardware/lcd.py]: RPLCD 라이브러리 기반 16x2 LCD 드라이버 모듈(I2C 및 GPIO 듀얼 모드 지원)로 터미널 가상 화면 렌더링 기능을 포함합니다.
+- [hardware/buzzer.py]: 패시브 부저 PWM을 이용한 상승(도-미-솔) / 하강(솔-미-도) 3음계 연주 클래스입니다.
+- [app.py]: 백그라운드 TCP 소켓 리스너 스레드와 모니터링용 Flask REST API를 동시에 구동하는 메인 스크립트입니다.
+- [requirements.txt]: 필요한 파이썬 라이브러리(Flask, RPLCD, smbus2 등) 의존성 파일입니다.
 
 ### 1.2 Pi A (Apache Web Client)
-- [index.html](file:///c:/Users/USER/Desktop/light_reservation/pi_a_apache/index.html): 글래스모피즘 테마의 반응형 제어 센터 대시보드 웹 페이지입니다.
-- [app.js](file:///c:/Users/USER/Desktop/light_reservation/pi_a_apache/app.js): CGI 호출, 실시간 상태 폴링(5초 주기) 및 화면 상의 부저 작동 인터랙션을 담당하는 JavaScript 모듈입니다.
-- [api/update_status.py](file:///c:/Users/USER/Desktop/light_reservation/pi_a_apache/api/update_status.py): CGI-BIN 규격의 게이트웨이 스크립트로, 웹 브라우저로부터 요청을 받아 Pi B로 소켓 패킷을 생성해 던집니다. state 인자 누락 시 Flask HTTP API를 통해 상태를 동기화합니다.
+- [index.html]: 글래스모피즘 테마의 반응형 제어 센터 대시보드 웹 페이지입니다.
+- [app.js]: CGI 호출, 실시간 상태 폴링(5초 주기) 및 화면 상의 부저 작동 인터랙션을 담당하는 JavaScript 모듈입니다.
+- [api/update_status.py]: CGI-BIN 규격의 게이트웨이 스크립트로, 웹 브라우저로부터 요청을 받아 Pi B로 소켓 패킷을 생성해 던집니다. state 인자 누락 시 Flask HTTP API를 통해 상태를 동기화합니다.
 
 ---
 
 ## 2. 테스트 및 검증 결과
 
 ### 2.1 하드웨어 단독 시나리오 테스트
-[test_hardware.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/tests/test_hardware.py)를 실행하여 4가지 상태 전환(`대기 ➔ 예약 ➔ 사용 ➔ 대기`) 시 LED, LCD, Buzzer 드라이버가 정상 작동함을 검증하였습니다.
+[test_hardware.py]를 실행하여 4가지 상태 전환(`대기 ➔ 예약 ➔ 사용 ➔ 대기`) 시 LED, LCD, Buzzer 드라이버가 정상 작동함을 검증하였습니다.
 - **결과**: `OK` (5.21s)
 
 ### 2.2 시스템 통신 통합 테스트
-[test_integration.py](file:///c:/Users/USER/Desktop/light_reservation/pi_b_flask/tests/test_integration.py)를 실행하여 백그라운드에 실제 Flask 및 TCP Socket 서버를 구동시킨 후, 가상 소켓 클라이언트를 통한 제어 패킷 전송과 Flask HTTP API 교차 조회가 오차 없이 정합성을 유지하는지 검증하였습니다.
+[test_integration.py]를 실행하여 백그라운드에 실제 Flask 및 TCP Socket 서버를 구동시킨 후, 가상 소켓 클라이언트를 통한 제어 패킷 전송과 Flask HTTP API 교차 조회가 오차 없이 정합성을 유지하는지 검증하였습니다.
 - **결과**: `OK` (4.88s)
   - `idle ➔ reserved`: 부저 없음, 노랑 LED, LCD Reserved 표시
   - `reserved ➔ in_use`: 부저 3가지 상승음 (도-미-솔), 빨강 LED, LCD In Use 표시
