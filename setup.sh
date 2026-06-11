@@ -52,7 +52,7 @@ setup_pi_a() {
   # update_status.py 파일에 IP 주소 주입 및 CRLF 줄바꿈 문자 제거 (Linux 실행 오류 방지)
   CGI_SOURCE="${PROJECT_DIR}/pi_a_apache/api/update_status.py"
   if [ -f "$CGI_SOURCE" ]; then
-    sed -i "s/PI_B_IP = os.environ.get('PI_B_IP', '127.0.0.1')/PI_B_IP = os.environ.get('PI_B_IP', '${PIB_IP}')/g" "$CGI_SOURCE"
+    sed -i "s/PI_B_IP = os.environ.get('PI_B_IP',.*/PI_B_IP = os.environ.get('PI_B_IP', '${PIB_IP}')/g" "$CGI_SOURCE"
     sed -i 's/\r$//' "$CGI_SOURCE"
     echo -e "-> Pi B 연동 IP를 ${GREEN}${PIB_IP}${NC}로 설정 완료했습니다."
   else
