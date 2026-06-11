@@ -49,10 +49,11 @@ setup_pi_a() {
     PIB_IP="127.0.0.1"
   fi
   
-  # update_status.py 파일에 IP 주소 주입
+  # update_status.py 파일에 IP 주소 주입 및 CRLF 줄바꿈 문자 제거 (Linux 실행 오류 방지)
   CGI_SOURCE="${PROJECT_DIR}/pi_a_apache/api/update_status.py"
   if [ -f "$CGI_SOURCE" ]; then
     sed -i "s/PI_B_IP = os.environ.get('PI_B_IP', '127.0.0.1')/PI_B_IP = os.environ.get('PI_B_IP', '${PIB_IP}')/g" "$CGI_SOURCE"
+    sed -i 's/\r$//' "$CGI_SOURCE"
     echo -e "-> Pi B 연동 IP를 ${GREEN}${PIB_IP}${NC}로 설정 완료했습니다."
   else
     echo -e "${RED}경고: update_status.py 파일을 찾을 수 없습니다.${NC}"
@@ -65,10 +66,11 @@ setup_pi_a() {
   cp "${PROJECT_DIR}/pi_a_apache/index.html" /var/www/html/
   cp "${PROJECT_DIR}/pi_a_apache/app.js" /var/www/html/
   
-  # CGI 디렉토리 생성 및 CGI 복사
+  # CGI 디렉토리 생성 및 CGI 복사 (755 및 실행 권한 보장)
   mkdir -p /var/www/html/api
   cp "$CGI_SOURCE" /var/www/html/api/
-  chmod +x /var/www/html/api/update_status.py
+  chmod 755 /var/www/html/api
+  chmod 755 /var/www/html/api/update_status.py
   
   # CGI가 작동할 수 있도록 Apache configuration에 ExecCGI 추가 권한 부여
   # (기본적으로 /var/www/html/api 내에서 .py 확장자의 CGI 실행을 활성화하는 임시 설정 추가)
@@ -143,7 +145,7 @@ EOF
 
   systemctl daemon-reload
   systemctl enable reservation_pib.service
-  systemctl start reservation_pib.service
+  systemctl restart reservation_pib.service
   
   echo -e "${GREEN}✔ Pi B (Flask & Hardware) 설정 완료 및 백그라운드 서비스 구동 성공!${NC}"
   echo -e "서비스 로그는 다음 명령어로 확인할 수 있습니다: ${BLUE}sudo journalctl -u reservation_pib.service -f${NC}"

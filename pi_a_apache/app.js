@@ -142,7 +142,7 @@ async function updateState(newState) {
         }
     } catch (error) {
         console.error('상태 변경 실패:', error);
-        // 사용자에게 다크 모드에 어울리는 세련된 경고 피드백 제공 가능
+        alert(`상태 변경 중 통신 오류가 발생했습니다.\n\n[상세 정보]\n${error.message}\n\n* Apache 에러 로그(/var/log/apache2/error.log) 및 브라우저 개발자 도구(F12) 콘솔 창을 확인해 주세요.`);
     }
 }
 
