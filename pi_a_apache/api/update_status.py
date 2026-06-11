@@ -5,8 +5,8 @@ import os
 import sys
 import json
 import socket
-import cgi
 import urllib.request
+import urllib.parse
 
 # ----------------- 설정 정보 -----------------
 # Pi B (소켓 및 Flask 서버)의 IP 주소
@@ -90,10 +90,12 @@ def main():
                 post_data = sys.stdin.read(content_length)
                 payload = json.loads(post_data)
         else:
-            # GET 요청 시 쿼리 스트링 파싱
-            form = cgi.FieldStorage()
-            for key in form.keys():
-                payload[key] = form.getvalue(key)
+            # GET 요청 시 쿼리 스트링 파싱 (cgi 모듈 배제로 Python 3.13+ 호환성 보장)
+            query_string = os.environ.get('QUERY_STRING', '')
+            parsed = urllib.parse.parse_qs(query_string)
+            for key, val in parsed.items():
+                if val:
+                    payload[key] = val[0]
     except Exception as e:
         print(json.dumps({'status': 'error', 'message': f'Request parsing failed: {str(e)}'}))
         sys.exit(1)
