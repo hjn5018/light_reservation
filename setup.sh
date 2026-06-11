@@ -49,16 +49,6 @@ setup_pi_a() {
     PIB_IP="127.0.0.1"
   fi
   
-  # update_status.py 파일에 IP 주소 주입 및 CRLF 줄바꿈 문자 제거 (Linux 실행 오류 방지)
-  CGI_SOURCE="${PROJECT_DIR}/pi_a_apache/api/update_status.py"
-  if [ -f "$CGI_SOURCE" ]; then
-    sed -i "s/PI_B_IP = os.environ.get('PI_B_IP',.*/PI_B_IP = os.environ.get('PI_B_IP', '${PIB_IP}')/g" "$CGI_SOURCE"
-    sed -i 's/\r$//' "$CGI_SOURCE"
-    echo -e "-> Pi B 연동 IP를 ${GREEN}${PIB_IP}${NC}로 설정 완료했습니다."
-  else
-    echo -e "${RED}경고: update_status.py 파일을 찾을 수 없습니다.${NC}"
-  fi
-  
   # 4. 웹 파일 및 CGI 파일 복사 및 권한 부여
   echo -e "${BLUE}4/4. 웹 리소스 배포 중...${NC}"
   
@@ -68,9 +58,20 @@ setup_pi_a() {
   
   # CGI 디렉토리 생성 및 CGI 복사 (755 및 실행 권한 보장)
   mkdir -p /var/www/html/api
-  cp "$CGI_SOURCE" /var/www/html/api/
-  chmod 755 /var/www/html/api
-  chmod 755 /var/www/html/api/update_status.py
+  
+  CGI_SOURCE="${PROJECT_DIR}/pi_a_apache/api/update_status.py"
+  CGI_DEST="/var/www/html/api/update_status.py"
+  if [ -f "$CGI_SOURCE" ]; then
+    cp "$CGI_SOURCE" "$CGI_DEST"
+    # 대상 파일(복사본)에 IP 주소 주입 및 CRLF 제거 (git 원본은 영향 받지 않음)
+    sed -i "s/PI_B_IP = os.environ.get('PI_B_IP',.*/PI_B_IP = os.environ.get('PI_B_IP', '${PIB_IP}')/g" "$CGI_DEST"
+    sed -i 's/\r$//' "$CGI_DEST"
+    chmod 755 /var/www/html/api
+    chmod 755 "$CGI_DEST"
+    echo -e "-> Pi B 연동 IP를 ${GREEN}${PIB_IP}${NC}로 설정하고 복사 완료했습니다."
+  else
+    echo -e "${RED}경고: update_status.py 파일을 찾을 수 없습니다.${NC}"
+  fi
   
   # CGI가 작동할 수 있도록 Apache configuration에 ExecCGI 추가 권한 부여
   # (기본적으로 /var/www/html/api 내에서 .py 확장자의 CGI 실행을 활성화하는 임시 설정 추가)
