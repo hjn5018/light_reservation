@@ -16,7 +16,7 @@ LED_RED_PIN = 22
 BUZZER_PIN = 18
 
 # 3. LCD 설정 (I2C 또는 GPIO 직결)
-LCD_MODE = 'I2C'  # 'I2C' 또는 'GPIO'
+LCD_MODE = os.environ.get('LCD_MODE', 'I2C').upper()  # 'I2C' 또는 'GPIO'
 LCD_I2C_ADDRESS = 0x27
 LCD_WIDTH = 16  # 한 줄당 글자 수
 

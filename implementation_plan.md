@@ -87,10 +87,18 @@ light_reservation/
   - 빨간 LED: GPIO 22
 - **부저 (Passive Buzzer)**:
   - PWM 시그널 핀: GPIO 18
-- **I2C LCD**:
-  - SDA: GPIO 2 (SDA)
-  - SCL: GPIO 3 (SCL)
-  - VCC: 5V / GND: GND
+- **LCD**:
+  - **방법 A: I2C 백팩 모듈 사용 시** (기본값):
+    - SDA: GPIO 2 (SDA)
+    - SCL: GPIO 3 (SCL)
+    - VCC: 5V / GND: GND
+  - **방법 B: GPIO 직접 연결 시** (I2C 백팩이 없을 때):
+    - LCD VSS: GND / LCD VDD: 5V
+    - LCD VO (Contrast 제어): 가변 저항 (또는 약 1kΩ~2kΩ 저항을 통해 GND 연결)
+    - LCD RS: GPIO 26 / LCD RW: GND
+    - LCD E: GPIO 19
+    - LCD D4: GPIO 13 / LCD D5: GPIO 6 / LCD D6: GPIO 5 / LCD D7: GPIO 11
+    - LCD A (백라이트 Anode): 5V (또는 220Ω 저항 연결) / LCD K (백라이트 Cathode): GND
 
 ---
 

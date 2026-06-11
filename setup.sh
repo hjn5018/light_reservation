@@ -99,6 +99,26 @@ setup_pi_b() {
   echo -e "${BLUE}2/3. Python 의존성 라이브러리 설치 (Flask, RPLCD, smbus2)...${NC}"
   pip3 install -r "${PROJECT_DIR}/pi_b_flask/requirements.txt" --break-system-packages 2>/dev/null || pip3 install -r "${PROJECT_DIR}/pi_b_flask/requirements.txt"
   
+  # 2.5. LCD 연결 모드 설정
+  echo -e "\n${BLUE}LCD 연결 방식을 설정합니다...${NC}"
+  echo -e "LCD 연결 타입을 선택해 주세요:"
+  echo -e "  ${GREEN}1)${NC} I2C 백팩 모듈 사용 (기본값)"
+  echo -e "  ${GREEN}2)${NC} GPIO 핀 직접 연결 (I2C 백팩 없음)"
+  read -p "선택 (1-2, 기본값: 1): " LCD_CHOICE
+  
+  if [ "$LCD_CHOICE" = "2" ]; then
+    LCD_MODE_VAL="GPIO"
+  else
+    LCD_MODE_VAL="I2C"
+  fi
+  
+  # config.py 기본값 업데이트
+  CONFIG_FILE="${PROJECT_DIR}/pi_b_flask/config.py"
+  if [ -f "$CONFIG_FILE" ]; then
+    sed -i "s/LCD_MODE = .*/LCD_MODE = os.environ.get('LCD_MODE', '${LCD_MODE_VAL}').upper()  # 'I2C' 또는 'GPIO'/g" "$CONFIG_FILE"
+    echo -e "-> config.py의 LCD_MODE 기본값을 ${GREEN}${LCD_MODE_VAL}${NC}로 업데이트했습니다."
+  fi
+
   # 3. Systemd 서비스 등록 (백그라운드 자동 실행용)
   echo -e "${BLUE}3/3. Flask & Socket 서버 백그라운드 서비스 등록...${NC}"
   
@@ -112,6 +132,7 @@ After=network.target
 Type=simple
 User=root
 WorkingDirectory=${PROJECT_DIR}
+Environment="LCD_MODE=${LCD_MODE_VAL}"
 ExecStart=/usr/bin/python3 ${PROJECT_DIR}/pi_b_flask/app.py
 Restart=always
 RestartSec=5

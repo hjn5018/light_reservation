@@ -49,10 +49,24 @@
   - 빨강 LED ➔ GPIO 22 (220Ω 저항 직렬 연결)
 - **부저 (패시브 부저) 연결**:
   - PWM I/O 핀 ➔ GPIO 18 (GND 및 VCC는 부저 모듈 전원부 연결)
-- **I2C 16x2 LCD 연결**:
-  - SDA ➔ GPIO 2 (SDA)
-  - SCL ➔ GPIO 3 (SCL)
-  - VCC ➔ 5V 단자, GND ➔ GND 단자
+- **LCD 연결**:
+  - **방법 A: I2C 백팩 모듈 사용 시** (기본값):
+    - SDA ➔ GPIO 2 (SDA)
+    - SCL ➔ GPIO 3 (SCL)
+    - VCC ➔ 5V 단자, GND ➔ GND 단자
+  - **방법 B: GPIO 직접 연결 시** (I2C 백팩이 없을 때):
+    - LCD VSS ➔ GND 단자
+    - LCD VDD ➔ 5V 단자
+    - LCD VO (Contrast 제어) ➔ 가변 저항의 가운데 핀 (또는 약 1kΩ~2kΩ 저항을 거쳐 GND로 연결)
+    - LCD RS ➔ GPIO 26
+    - LCD RW ➔ GND 단자 (쓰기 고정)
+    - LCD E ➔ GPIO 19
+    - LCD D4 ➔ GPIO 13
+    - LCD D5 ➔ GPIO 6
+    - LCD D6 ➔ GPIO 5
+    - LCD D7 ➔ GPIO 11
+    - LCD A (백라이트 Anode) ➔ 5V 단자 (또는 220Ω 저항 직렬 연결 후 5V)
+    - LCD K (백라이트 Cathode) ➔ GND 단자
 
 ### STEP 2: 자동 원스톱 배포 (setup.sh 사용)
 
