@@ -128,6 +128,11 @@ def change_item_state(item_id, new_state, input_pin=None):
         if current_state == normalized_state:
             return True, "No state change required"
 
+        # 타입 불일치(정수 vs 문자열)로 인한 인증 오작동 방지를 위해 저장된 PIN을 문자열로 표준화
+        saved_pin_str = str(saved_pin).strip() if saved_pin is not None else None
+        
+        logger.info(f"[PIN 인증 시도] 아이템: {item_id}, 입력 PIN: '{input_pin}', 저장 PIN: '{saved_pin_str}', 마스터 PIN: '{MASTER_PIN}'")
+
         # 상태 전환 조건 체크 및 PIN 확인
         # 1) 대기 -> 예약
         if current_state == 'idle' and normalized_state == 'reserved':
@@ -139,7 +144,8 @@ def change_item_state(item_id, new_state, input_pin=None):
         elif current_state == 'reserved' and normalized_state == 'in_use':
             if not input_pin:
                 return False, "PIN is required to change to in_use"
-            if input_pin != saved_pin and input_pin != MASTER_PIN:
+            if input_pin != saved_pin_str and input_pin != MASTER_PIN:
+                logger.warning(f"[인증 실패] 사용시작 거절 - 입력 PIN '{input_pin}'이 저장 PIN '{saved_pin_str}' 및 마스터 PIN '{MASTER_PIN}'과 일치하지 않습니다.")
                 return False, "Incorrect PIN number"
             
         # 3) 사용 또는 예약 -> 대기 (반납/취소)
@@ -147,7 +153,8 @@ def change_item_state(item_id, new_state, input_pin=None):
             # 예약 취소 또는 사용 종료 시 PIN 확인 필요
             if not input_pin:
                 return False, "PIN is required to release or cancel"
-            if input_pin != saved_pin and input_pin != MASTER_PIN:
+            if input_pin != saved_pin_str and input_pin != MASTER_PIN:
+                logger.warning(f"[인증 실패] 반납/취소 거절 - 입력 PIN '{input_pin}'이 저장 PIN '{saved_pin_str}' 및 마스터 PIN '{MASTER_PIN}'과 일치하지 않습니다.")
                 return False, "Incorrect PIN number"
             item["pin"] = None
 

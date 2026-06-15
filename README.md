@@ -103,3 +103,27 @@ python pi_b_flask/tests/test_hardware.py
 python -m unittest pi_b_flask/tests/test_integration.py
 ```
 *   배지 조회 검증, PIN 누락 시 차단 검증, 올바르지 않은 PIN 검증, 마스터 PIN 검증, 기기 모니터링 포커스 이동 검증 등 백엔드 소켓 및 HTTP 파이프라인의 모든 예외 처리를 자동 확인합니다.
+
+---
+
+## ⚙️ 시스템 데몬 및 서비스 관리 안내 (System Daemon Services)
+
+이 시스템은 기기가 항시 켜져 있고 신뢰성 있게 작동할 수 있도록 시스템 레벨의 백그라운드 서비스(Daemon) 및 파이썬 내부 데몬 스레드를 적극 활용합니다.
+
+### 1) Pi A (웹 게이트웨이 파트)
+*   **Apache2 웹 서버 데몬 (`apache2`)**:
+    *   **역할**: 포트 `80`번에서 정적 웹 리소스(HTML/JS)를 서빙하고, `/api/update_status.py` 경로로 들어오는 HTTP 요청을 CGI 파이프라인을 통해 처리합니다.
+    *   **상태 확인**: `sudo systemctl status apache2`
+    *   **재시작**: `sudo systemctl restart apache2`
+
+### 2) Pi B (제어 및 하드웨어 파트)
+*   **라즈베리파이 시스템 서비스 데몬 (`reservation_pib.service`)**:
+    *   **역할**: OS 부팅 시 `/usr/bin/python3 pi_b_flask/app.py`를 자동으로 백그라운드 구동하며, 크래시 발생 시 스스로 복구(`Restart=always`)합니다.
+    *   **상태 확인**: `sudo systemctl status reservation_pib.service`
+    *   **실시간 로그 추적**: `sudo journalctl -u reservation_pib.service -f`
+    *   **재시작**: `sudo systemctl restart reservation_pib.service`
+
+*   **Python 내부 데몬 스레드 (Daemon Threads)**:
+    *   **소켓 리스너 스레드 (`socket_thread`)**: TCP 포트 `50007`번에서 Pi A의 상태 변경 요청 패킷을 비동기 수신 대기합니다.
+    *   **자동 만료 스케줄러 스레드 (`scheduler_thread`)**: 1초 주기로 전역 상태를 순회하여 예약/사용 타임아웃을 연산하고 초과 시 자동 대기 복귀시킵니다.
+
