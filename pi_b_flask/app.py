@@ -79,6 +79,7 @@ def save_db(data):
             json.dump(data, f, ensure_ascii=False, indent=2)
     except Exception as e:
         logger.error(f"JSON DB 파일 저장 중 오류 발생: {e}")
+        raise e
 
 # 초기 하드웨어 물리 상태 갱신
 def sync_physical_hardware():
@@ -166,7 +167,10 @@ def change_item_state(item_id, new_state, input_pin=None):
         logger.info(f"[{RESERVATION_ITEMS[item_id]['name']}] 상태 전환: {current_state} ➔ {normalized_state}")
         item["state"] = normalized_state
         item["status_changed_at"] = time.time()
-        save_db(db)
+        try:
+            save_db(db)
+        except Exception as e:
+            return False, f"Database write failed: {str(e)}"
 
         # 물리 하드웨어 연동 (현재 모니터링 지정 대상 아이템일 경우만 반응)
         if item_id == active_monitor_item:
