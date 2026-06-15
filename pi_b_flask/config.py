@@ -44,3 +44,35 @@ except ImportError:
 
 # 디버그 콘솔 출력 여부
 DEBUG_MODE = True
+
+# JSON DB 파일 경로 설정
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+JSON_DB_PATH = os.path.join(BASE_DIR, 'data.json')
+
+# 관리자 마스터 PIN
+MASTER_PIN = "0000"
+
+# 공간 및 물품 예약 기본 사양 정의 (이용 시간, 예약 대기 시간은 초 단위로 설정)
+RESERVATION_ITEMS = {
+    "meeting_room": {
+        "name": "회의실",
+        "usage_duration": 3600,        # 60분
+        "reservation_timeout": 600     # 10분
+    },
+    "pc": {
+        "name": "학과 PC",
+        "usage_duration": 7200,        # 120분
+        "reservation_timeout": 900     # 15분
+    },
+    "stapler": {
+        "name": "공용 스테이플러",
+        "usage_duration": 300,         # 5분
+        "reservation_timeout": 120     # 2분
+    },
+    "raspberry_pi": {
+        "name": "테스트용 라즈베리파이",
+        "usage_duration": 10800,       # 180분
+        "reservation_timeout": 1200    # 20분
+    }
+}
+

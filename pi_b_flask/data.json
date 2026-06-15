@@ -1,0 +1,25 @@
+{
+  "active_monitor_item": "stapler",
+  "items": {
+    "meeting_room": {
+      "state": "idle",
+      "pin": null,
+      "status_changed_at": 1781500764.3070316
+    },
+    "pc": {
+      "state": "idle",
+      "pin": null,
+      "status_changed_at": null
+    },
+    "stapler": {
+      "state": "idle",
+      "pin": null,
+      "status_changed_at": null
+    },
+    "raspberry_pi": {
+      "state": "idle",
+      "pin": null,
+      "status_changed_at": null
+    }
+  }
+}

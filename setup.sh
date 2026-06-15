@@ -122,6 +122,25 @@ setup_pi_b() {
     echo -e "-> config.py의 LCD_MODE 기본값을 ${GREEN}${LCD_MODE_VAL}${NC}로 업데이트했습니다."
   fi
 
+  # 2.6. DB 데이터 파일 (data.json) 권한 및 기본 초기화 안전망 구축
+  JSON_DB="${PROJECT_DIR}/pi_b_flask/data.json"
+  if [ ! -f "$JSON_DB" ]; then
+    cat <<EOF > "$JSON_DB"
+{
+  "active_monitor_item": "meeting_room",
+  "items": {
+    "meeting_room": { "state": "idle", "pin": null, "status_changed_at": null },
+    "pc": { "state": "idle", "pin": null, "status_changed_at": null },
+    "stapler": { "state": "idle", "pin": null, "status_changed_at": null },
+    "raspberry_pi": { "state": "idle", "pin": null, "status_changed_at": null }
+  }
+}
+EOF
+    echo -e "-> data.json DB 파일을 새롭게 생성했습니다."
+  fi
+  chmod 666 "$JSON_DB"
+  echo -e "-> DB 데이터 파일 권한 설정 완료 (${GREEN}data.json${NC})"
+
   # 3. Systemd 서비스 등록 (백그라운드 자동 실행용)
   echo -e "${BLUE}3/3. Flask & Socket 서버 백그라운드 서비스 등록...${NC}"
   

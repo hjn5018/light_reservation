@@ -93,19 +93,31 @@ class LCDController:
         # 동작 콘솔 출력 (Dummy 및 실기기 공통)
         logger.info(f"[LCD 화면 갱신]\n┌────────────────┐\n│{line1}│\n│{line2}│\n└────────────────┘")
 
-    def display_status(self, state):
-        """예약 상태에 맞는 LCD 문구를 보여줍니다."""
+    def display_status(self, state, item_name):
+        """예약 상태에 맞는 LCD 문구를 보여줍니다. 한글 깨짐 방지를 위해 영어로 변환하여 출력합니다."""
         state = state.strip().lower()
         
-        # 한글 상태명과 깔끔한 영문 상태명을 혼용하여 LCD에 표기
+        # 한글 이름 영문 매핑
+        eng_names = {
+            "회의실": "Meeting Room",
+            "학과 PC": "Dept. PC",
+            "공용 스테이플러": "Stapler",
+            "테스트용 라즈베리파이": "Raspberry Pi"
+        }
+        display_name = eng_names.get(item_name, item_name)
+        
+        line1 = f"Item: {display_name}"
+        
         if state in ['대기', 'idle', 'available']:
-            self.display_message("Status: Available", "   - READY -   ")
+            line2 = "Status: Available"
         elif state in ['예약', 'reserved']:
-            self.display_message("Status: Reserved", "   - HOLDING - ")
+            line2 = "Status: Reserved"
         elif state in ['사용', 'in_use', 'occupied']:
-            self.display_message("Status: In Use", "  - OCCUPIED - ")
+            line2 = "Status: In Use"
         else:
-            self.display_message("Status: Unknown", f"State: {state[:10]}")
+            line2 = f"State: {state[:10]}"
+            
+        self.display_message(line1, line2)
 
     def clear(self):
         """LCD 화면을 지웁니다."""

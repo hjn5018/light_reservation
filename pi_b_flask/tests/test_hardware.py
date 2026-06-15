@@ -31,13 +31,13 @@ class TestHardwareIntegration(unittest.TestCase):
         # 1. 초기 상태: 대기 (Idle)
         print("\n--- [시나리오 1] 초기 상태: 대기 (LED: 초록, LCD: Available) ---")
         self.led.set_state('대기')
-        self.lcd.display_status('대기')
+        self.lcd.display_status('대기', '회의실')
         time.sleep(1)
 
         # 2. 대기 -> 예약 (Reserved)
         print("\n--- [시나리오 2] 대기 -> 예약 (LED: 노랑, LCD: Reserved) ---")
         self.led.set_state('예약')
-        self.lcd.display_status('예약')
+        self.lcd.display_status('예약', '회의실')
         time.sleep(1)
 
         # 3. 예약 -> 사용 (In Use)
@@ -45,7 +45,7 @@ class TestHardwareIntegration(unittest.TestCase):
         print("\n--- [시나리오 3] 예약 -> 사용 (부저: 상승음, LED: 빨강, LCD: In Use) ---")
         self.buzzer.play_reserved_to_in_use()
         self.led.set_state('사용')
-        self.lcd.display_status('사용')
+        self.lcd.display_status('사용', '회의실')
         time.sleep(1)
 
         # 4. 사용 -> 대기 (Idle)
@@ -53,7 +53,7 @@ class TestHardwareIntegration(unittest.TestCase):
         print("\n--- [시나리오 4] 사용 -> 대기 (부저: 하강음, LED: 초록, LCD: Available) ---")
         self.buzzer.play_in_use_to_idle()
         self.led.set_state('대기')
-        self.lcd.display_status('대기')
+        self.lcd.display_status('대기', '회의실')
         time.sleep(1)
 
 if __name__ == '__main__':

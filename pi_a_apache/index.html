@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="라즈베리파이 2대 기반의 스마트 공간/장비 실시간 예약 시스템 컨트롤 센터">
-    <title>Smart Reservation System</title>
+    <meta name="description" content="라즈베리파이 2대 기반의 스마트 공용 공간/물품 실시간 통합 예약 관리 시스템">
+    <title>Smart Multi-Resource Control Center</title>
     
     <!-- Premium Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,8 +17,8 @@
     <style>
         :root {
             /* Sleek Color Palette */
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            --glass-bg: rgba(30, 41, 59, 0.45);
+            --bg-gradient: linear-gradient(135deg, #0b0f19 0%, #111827 50%, #1e1b4b 100%);
+            --glass-bg: rgba(17, 24, 39, 0.6);
             --glass-border: rgba(255, 255, 255, 0.08);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
@@ -29,11 +29,11 @@
             --color-in-use: #ef4444;      /* Crimson Red */
             
             /* Glow effects */
-            --glow-idle: 0 0 25px rgba(16, 185, 129, 0.4);
-            --glow-reserved: 0 0 25px rgba(245, 158, 11, 0.4);
-            --glow-in-use: 0 0 25px rgba(239, 68, 68, 0.4);
+            --glow-idle: 0 0 25px rgba(16, 185, 129, 0.25);
+            --glow-reserved: 0 0 25px rgba(245, 158, 11, 0.25);
+            --glow-in-use: 0 0 25px rgba(239, 68, 68, 0.25);
             
-            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -51,19 +51,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             overflow-x: hidden;
             position: relative;
+            padding: 2rem 1rem;
         }
 
-        /* Ambient glowing backgrounds in layout */
+        /* Ambient glowing backgrounds */
         body::before, body::after {
             content: '';
             position: absolute;
-            width: 400px;
-            height: 400px;
+            width: 500px;
+            height: 500px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
             z-index: 0;
             pointer-events: none;
         }
@@ -72,8 +72,7 @@
 
         .container {
             width: 100%;
-            max-width: 800px;
-            padding: 2.5rem;
+            max-width: 900px;
             z-index: 10;
             display: flex;
             flex-direction: column;
@@ -83,13 +82,13 @@
         /* Header design */
         header {
             text-align: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         h1 {
             font-size: 2.8rem;
             font-weight: 800;
-            background: linear-gradient(to right, #818cf8, #c084fc);
+            background: linear-gradient(to right, #818cf8, #c084fc, #6366f1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.05em;
@@ -102,16 +101,30 @@
             font-weight: 300;
         }
 
-        /* Glassmorphism Status Card */
+        /* Section Title */
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: #a5b4fc;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Glassmorphism Status Card (Focused device) */
         .status-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
-            padding: 2.5rem;
+            padding: 2rem;
             text-align: center;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.4);
             transition: var(--transition-smooth);
             position: relative;
             overflow: hidden;
@@ -124,123 +137,71 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: var(--color-idle); /* Will be updated via JS */
+            background: var(--color-idle);
             transition: var(--transition-smooth);
+            id: "statusBarTop";
         }
 
         .status-badge-container {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 130px;
-            height: 130px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.03);
             border: 2px dashed rgba(255, 255, 255, 0.1);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             position: relative;
             transition: var(--transition-smooth);
         }
 
         .status-icon {
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: var(--color-idle);
             transition: var(--transition-smooth);
             filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.3));
         }
 
         .status-title {
-            font-size: 1.2rem;
+            font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 0.2em;
             color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .status-value {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 800;
             color: var(--text-primary);
             transition: var(--transition-smooth);
+            margin-bottom: 0.25rem;
         }
 
-        /* Interactive Control Panel */
-        .controls {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.25rem;
-        }
-
-        .btn {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 1.5rem 1rem;
-            color: var(--text-primary);
+        .status-focused-item {
             font-size: 1.1rem;
             font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.75rem;
-            transition: var(--transition-smooth);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            color: #818cf8;
+            background: rgba(129, 140, 248, 0.12);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid rgba(129, 140, 248, 0.2);
         }
 
-        .btn i {
-            font-size: 1.5rem;
-            transition: var(--transition-smooth);
-        }
-
-        /* Hover & Active states with rich aesthetics */
-        .btn-idle:hover {
-            background: rgba(16, 185, 129, 0.15);
-            border-color: var(--color-idle);
-            box-shadow: var(--glow-idle);
-        }
-        .btn-idle:hover i {
-            color: var(--color-idle);
-            transform: scale(1.1);
-        }
-
-        .btn-reserved:hover {
-            background: rgba(245, 158, 11, 0.15);
-            border-color: var(--color-reserved);
-            box-shadow: var(--glow-reserved);
-        }
-        .btn-reserved:hover i {
-            color: var(--color-reserved);
-            transform: scale(1.1);
-        }
-
-        .btn-in-use:hover {
-            background: rgba(239, 68, 68, 0.15);
-            border-color: var(--color-in-use);
-            box-shadow: var(--glow-in-use);
-        }
-        .btn-in-use:hover i {
-            color: var(--color-in-use);
-            transform: scale(1.1);
-        }
-
-        .btn:active {
-            transform: scale(0.96);
-        }
-
-        /* Audio Alert Popups / Indicators for buzzer actions */
+        /* Active alert (Buzzer) */
         .buzzer-alert {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
             margin-top: 1rem;
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1.25rem;
             background: rgba(99, 102, 241, 0.15);
             border: 1px solid rgba(99, 102, 241, 0.3);
             border-radius: 30px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 400;
             color: #a5b4fc;
             opacity: 0;
@@ -254,10 +215,10 @@
             transform: translateY(0);
         }
 
-        /* Wave animation for sound alert */
+        /* Wave animation */
         .wave-bar {
             width: 3px;
-            height: 12px;
+            height: 10px;
             background-color: #818cf8;
             border-radius: 3px;
             animation: bounce 0.6s infinite ease-in-out alternate;
@@ -266,14 +227,359 @@
         .wave-bar:nth-child(3) { animation-delay: 0.4s; }
 
         @keyframes bounce {
-            from { height: 4px; }
-            to { height: 16px; }
+            from { height: 3px; }
+            to { height: 14px; }
+        }
+
+        /* Resource Grid Layout */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: var(--transition-smooth);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Focus highlight for card */
+        .resource-card.focused {
+            border-color: #6366f1;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+        }
+
+        .resource-card.focused::after {
+            content: '\f10a'; /* Microchip icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: #6366f1;
+            font-size: 1.1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0.6; transform: scale(1); }
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Status Badges */
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-idle {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--color-idle);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+
+        .badge-reserved {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--color-reserved);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .badge-in_use {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--color-in-use);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .card-time-info {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 0.5rem 0.75rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .timer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .timer-value {
+            font-family: monospace;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #e2e8f0;
+        }
+
+        .timer-value.active {
+            color: #fb7185;
+            animation: blink 1s infinite alternate;
+        }
+
+        @keyframes blink {
+            from { opacity: 0.6; }
+            to { opacity: 1; }
+        }
+
+        .card-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        .card-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            transition: var(--transition-smooth);
+        }
+
+        .card-btn i {
+            font-size: 1rem;
+        }
+
+        /* Button Colors based on action */
+        .card-btn-idle:hover {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--color-idle);
+            color: var(--color-idle);
+        }
+        .card-btn-reserved:hover {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: var(--color-reserved);
+            color: var(--color-reserved);
+        }
+        .card-btn-in_use:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: var(--color-in-use);
+            color: var(--color-in-use);
+        }
+
+        /* Active control button state */
+        .card-btn.active-state {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.2);
+            cursor: default;
+        }
+
+        .focus-action-btn {
+            grid-column: span 3;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 0.5rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            transition: var(--transition-smooth);
+        }
+
+        .focus-action-btn:hover {
+            background: rgba(99, 102, 241, 0.25);
+            border-color: #6366f1;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .focus-action-btn.active-focus {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: #6366f1;
+            color: #ffffff;
+            font-weight: 700;
+            cursor: default;
+        }
+
+        /* Glassmorphism Modal Popups */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: rgba(23, 28, 41, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            margin-bottom: 1.25rem;
+        }
+
+        .modal-icon {
+            font-size: 2.2rem;
+            color: #fbbf24;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .modal-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .modal-input-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .pin-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 0.85rem;
+            color: #ffffff;
+            font-size: 1.5rem;
+            letter-spacing: 0.5em;
+            text-align: center;
+            outline: none;
+            transition: var(--transition-smooth);
+        }
+
+        .pin-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .modal-btn {
+            padding: 0.75rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            outline: none;
+        }
+
+        .modal-btn-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+        }
+
+        .modal-btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .modal-btn-confirm {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            border: none;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .modal-btn-confirm:hover {
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .modal-btn-confirm:active {
+            transform: translateY(1px);
         }
 
         /* Footer info */
         footer {
             margin-top: auto;
-            padding: 2rem;
+            padding: 2.5rem 1rem;
             text-align: center;
             font-size: 0.85rem;
             color: var(--text-secondary);
@@ -281,11 +587,8 @@
 
         /* Responsive Layout */
         @media (max-width: 600px) {
-            .controls {
+            .resource-grid {
                 grid-template-columns: 1fr;
-            }
-            .container {
-                padding: 1.5rem;
             }
             h1 {
                 font-size: 2.2rem;
@@ -297,47 +600,73 @@
 
     <div class="container">
         <header>
-            <h1>CONTROL CENTER</h1>
-            <p>Pi A (Apache) ➔ Pi B (Flask) Socket Integration</p>
+            <h1>SMART CONTROL CENTER</h1>
+            <p>Pi A (Apache) ➔ Pi B (Flask) IoT Resource Management</p>
         </header>
 
-        <!-- Current Status Display Card -->
-        <main class="status-card" id="statusCard">
-            <div class="status-badge-container" id="statusBadge">
-                <i class="fa-solid fa-circle-check status-icon" id="statusIcon"></i>
+        <!-- Current Status Display Card (Hardware focus info) -->
+        <section>
+            <div class="section-title">
+                <i class="fa-solid fa-microchip"></i>
+                <span>물리 기기 모니터링 대상 (Hardware Linkage)</span>
             </div>
-            <div class="status-title">Current System State</div>
-            <div class="status-value" id="statusValue">대기 (AVAILABLE)</div>
+            
+            <main class="status-card" id="statusCard">
+                <div class="status-badge-container" id="statusBadge">
+                    <i class="fa-solid fa-circle-check status-icon" id="statusIcon"></i>
+                </div>
+                <div class="status-title" id="statusTitle">AVAILABLE</div>
+                <div class="status-value" id="statusValue">대기 중</div>
+                <div class="status-focused-item" id="statusFocusedItem">모니터링 대상: -</div>
 
-            <!-- Buzzer Melody Alert Overlay -->
-            <div class="buzzer-alert" id="buzzerAlert">
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <div class="wave-bar"></div>
-                <span id="buzzerText">Buzzer Alert Ringing</span>
-            </div>
-        </main>
-
-        <!-- Command Control Buttons -->
-        <section class="controls">
-            <button class="btn btn-idle" id="btnIdle" onclick="updateState('idle')">
-                <i class="fa-solid fa-circle-play"></i>
-                <span>대기 등록</span>
-            </button>
-            <button class="btn btn-reserved" id="btnReserved" onclick="updateState('reserved')">
-                <i class="fa-solid fa-hourglass-half"></i>
-                <span>공간 예약</span>
-            </button>
-            <button class="btn btn-in-use" id="btnInUse" onclick="updateState('in_use')">
-                <i class="fa-solid fa-user-lock"></i>
-                <span>사용 시작</span>
-            </button>
+                <!-- Buzzer Melody Alert Overlay -->
+                <div class="buzzer-alert" id="buzzerAlert">
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <span id="buzzerText">부저 멜로디 연주 중</span>
+                </div>
+            </main>
         </section>
+
+        <!-- Resource Management Grid -->
+        <section>
+            <div class="section-title">
+                <i class="fa-solid fa-list-check"></i>
+                <span>전체 자원 및 기기 현황 (Integrated Resources)</span>
+            </div>
+            
+            <div class="resource-grid" id="resourceGrid">
+                <!-- JavaScript를 통해 동적 렌더링 -->
+                <div style="text-align: center; color: var(--text-secondary); grid-column: 1/-1; padding: 2rem;">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                    <p>자원 데이터를 받아오는 중...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- PIN 입력 간편 인증 모달 -->
+    <div class="modal-overlay" id="pinModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fa-solid fa-key modal-icon" id="modalIcon"></i>
+                <div class="modal-title" id="modalTitle">비밀번호(PIN) 확인</div>
+                <div class="modal-desc" id="modalDesc">본 예약을 제어하기 위한 4자리 비밀번호를 입력해주세요.</div>
+            </div>
+            <div class="modal-input-group">
+                <input type="password" class="pin-input" id="pinInput" maxlength="4" placeholder="••••" autocomplete="off" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" onclick="closePinModal()">취소</button>
+                <button class="modal-btn modal-btn-confirm" id="modalConfirmBtn">확인</button>
+            </div>
+        </div>
     </div>
 
     <footer>
         <p><i class="fa-solid fa-server"></i> Pi A (Apache + CGI) | <i class="fa-solid fa-microchip"></i> Pi B (Flask + Socket)</p>
-        <p style="margin-top: 0.5rem; opacity: 0.6;">&copy; 2026 Reservation IoT Solution. All rights reserved.</p>
+        <p style="margin-top: 0.5rem; opacity: 0.6;">&copy; 2026 Smart Reservation IoT Suite. All rights reserved.</p>
     </footer>
 
     <!-- Frontend logic linkage -->

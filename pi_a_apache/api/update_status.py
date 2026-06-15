@@ -16,9 +16,9 @@ PI_B_FLASK_PORT = 5000 # Flask REST API 포트
 SOCKET_TIMEOUT = 3.0   # 초 단위 타임아웃
 # ---------------------------------------------
 
-def send_socket_message(state_value):
+def send_socket_message(payload):
     """
-    Pi B의 TCP 소켓 서버로 상태 변경 정보를 JSON 형식으로 전송하고
+    Pi B의 TCP 소켓 서버로 제어 요청 페이로드를 JSON 형식으로 전송하고
     결과를 리턴받습니다.
     """
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -29,14 +29,13 @@ def send_socket_message(state_value):
         client_socket.connect((PI_B_IP, PI_B_PORT))
         
         # 보낼 메시지 가공
-        payload = {'state': state_value}
         message = json.dumps(payload).encode('utf-8')
         
         # 전송
         client_socket.sendall(message)
         
         # 응답 수신
-        response_data = client_socket.recv(1024)
+        response_data = client_socket.recv(4096)  # 넉넉하게 수신 버퍼 설정
         if response_data:
             return json.loads(response_data.decode('utf-8'))
         else:
@@ -53,7 +52,7 @@ def send_socket_message(state_value):
 
 def get_current_state_from_flask():
     """
-    Pi B의 Flask REST API를 조회하여 현재 상태를 대행 조회합니다.
+    Pi B의 Flask REST API를 조회하여 모든 기기의 현재 상태를 대행 조회합니다.
     """
     try:
         url = f"http://{PI_B_IP}:{PI_B_FLASK_PORT}/api/status"
@@ -61,7 +60,7 @@ def get_current_state_from_flask():
         with urllib.request.urlopen(req, timeout=SOCKET_TIMEOUT) as response:
             if response.status == 200:
                 res_data = json.loads(response.read().decode('utf-8'))
-                return {'status': 'success', 'current_state': res_data.get('state')}
+                return res_data
             else:
                 return {'status': 'error', 'message': f'HTTP status error: {response.status}'}
     except Exception as e:
@@ -90,7 +89,7 @@ def main():
                 post_data = sys.stdin.read(content_length)
                 payload = json.loads(post_data)
         else:
-            # GET 요청 시 쿼리 스트링 파싱 (cgi 모듈 배제로 Python 3.13+ 호환성 보장)
+            # GET 요청 시 쿼리 스트링 파싱
             query_string = os.environ.get('QUERY_STRING', '')
             parsed = urllib.parse.parse_qs(query_string)
             for key, val in parsed.items():
@@ -101,13 +100,23 @@ def main():
         sys.exit(1)
 
     state_value = payload.get('state')
+    action_value = payload.get('action')
+    item_id = payload.get('item_id')
     
-    # state가 주어지지 않은 경우: 현재 상태 조회 동작 수행
-    if not state_value:
+    # 상태 변경(state 제공) 또는 모니터링 지정(action=set_focus)이 아닌 경우 ➔ 조회 수행
+    # 단, item_id만 주어지고 아무런 state나 action이 없어도 단순 조회를 수행합니다.
+    if not state_value and action_value != 'set_focus':
         result = get_current_state_from_flask()
     else:
-        # state가 주어진 경우: 소켓을 통해 변경 지시
-        result = send_socket_message(state_value)
+        # 변경 지시 ➔ 소켓을 통해 변경 패킷 전달
+        # 소켓 통신용 파라미터 빌드
+        socket_payload = {
+            'item_id': item_id,
+            'state': state_value,
+            'pin': payload.get('pin'),
+            'action': action_value or 'change_state'
+        }
+        result = send_socket_message(socket_payload)
     
     # 최종 결과 JSON 출력
     print(json.dumps(result))
