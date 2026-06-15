@@ -255,8 +255,9 @@ function openPinModal(itemId, targetState, title, desc, iconClass) {
     setTimeout(() => pinInput.focus(), 150);
     
     // 확인 버튼에 이벤트 핸들러 바인딩 (이전 리스너 소거 위해 복사 방식 채택)
-    const newConfirmBtn = modalConfirmBtn.cloneNode(true);
-    modalConfirmBtn.parentNode.replaceChild(newConfirmBtn, modalConfirmBtn);
+    const currentConfirmBtn = document.getElementById('modalConfirmBtn');
+    const newConfirmBtn = currentConfirmBtn.cloneNode(true);
+    currentConfirmBtn.parentNode.replaceChild(newConfirmBtn, currentConfirmBtn);
     
     // 전역 변수 참조 변경
     document.getElementById('modalConfirmBtn').addEventListener('click', () => {
