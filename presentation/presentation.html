@@ -1047,26 +1047,6 @@
       background: rgba(255, 255, 255, 0.05);
       border-radius: 99px;
       overflow: hidden;
-      position: relative;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      width: 9.09%;
-      background: linear-gradient(90deg, var(--color-emerald), var(--color-amber));
-      border-radius: 99px;
-      transition: width 0.5s ease;
-    }
-
-    .keyboard-hint {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .key-badge {
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.15);
       padding: 0.15rem 0.5rem;
@@ -1074,6 +1054,239 @@
       font-family: var(--font-en);
       font-size: 0.75rem;
       font-weight: bold;
+    }
+
+    /* Slide 7 White Theme Overrides */
+    #slide-7 {
+      background: #ffffff !important;
+      color: #1e293b !important;
+      border: 1px solid #cbd5e1 !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08) !important;
+    }
+    #slide-7 .slide-title {
+      color: #0f172a !important;
+    }
+    #slide-7 .slide-category {
+      color: #0284c7 !important;
+    }
+    #slide-7 .slide-num-badge {
+      color: #64748b !important;
+      border-color: #cbd5e1 !important;
+    }
+    #slide-7 .slide-footer {
+      color: #64748b !important;
+      border-top-color: #e2e8f0 !important;
+    }
+
+    /* Flowchart Layout Styles */
+    .flowchart-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      padding: 0.5rem;
+      position: relative;
+    }
+    .flowchart-col {
+      width: 32%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      position: relative;
+    }
+    .flowchart-col-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #0f172a;
+      background: #f1f5f9;
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      width: 90%;
+      text-align: center;
+      margin-bottom: 0.4rem;
+    }
+    .fc-shape {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      line-height: 1.3;
+    }
+    .fc-start-end {
+      border: 2px solid #b91c1c; /* Red outline */
+      background: #ffffff;
+      color: #b91c1c;
+      padding: 0.35rem 1.2rem;
+      border-radius: 9999px;
+      width: 70%;
+    }
+    .fc-init {
+      border: 2px solid #b91c1c; /* Red outline */
+      background: #ffffff;
+      color: #0f172a;
+      padding: 0.35rem 0.6rem;
+      width: 85%;
+      border-radius: 4px;
+      position: relative;
+      clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+    }
+    .fc-rect {
+      border: 2px solid #ea580c; /* Orange outline */
+      background: #ffffff;
+      color: #0f172a;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      width: 80%;
+    }
+    .fc-decision {
+      border: 2px solid #ea580c; /* Orange outline */
+      background: #ffffff;
+      color: #0f172a;
+      padding: 0.4rem 0.6rem;
+      width: 75%;
+      position: relative;
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      font-size: 0.7rem;
+      min-height: 52px;
+    }
+    .fc-circle {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      border: 2px solid #b91c1c;
+      color: #b91c1c;
+      background: #ffffff;
+      font-size: 0.65rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fc-arrow {
+      color: #ea580c;
+      font-size: 1.1rem;
+      font-weight: 900;
+      line-height: 1;
+      margin: -2px 0;
+    }
+    .fc-loop-arrow {
+      position: absolute;
+      border: 1.5px solid #ea580c;
+      border-left: none;
+      width: 15px;
+      height: 90px;
+      right: 5px;
+      top: 135px;
+      border-radius: 0 8px 8px 0;
+    }
+    .fc-loop-arrow::after {
+      content: "▲";
+      position: absolute;
+      color: #ea580c;
+      font-size: 0.55rem;
+      left: -3px;
+      top: -3px;
+    }
+    .fc-loop-arrow-left {
+      position: absolute;
+      border: 1.5px solid #ea580c;
+      border-right: none;
+      width: 15px;
+      height: 90px;
+      left: 5px;
+      top: 105px;
+      border-radius: 8px 0 0 8px;
+    }
+    .fc-loop-arrow-left::after {
+      content: "▲";
+      position: absolute;
+      color: #ea580c;
+      font-size: 0.55rem;
+      right: -3px;
+      top: -3px;
+    }
+    .fc-large-box {
+      border: 2px solid #16a34a; /* Green outline */
+      background: #f0fdf4; /* Light green background */
+      color: #14532d;
+      border-radius: 12px;
+      padding: 0.5rem;
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      align-items: center;
+    }
+    .fc-box-header {
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: #0f172a;
+      background: #fef08a; /* Yellow header banner */
+      border: 1px solid #eab308;
+      border-radius: 4px;
+      width: 100%;
+      text-align: center;
+      padding: 0.2rem 0;
+    }
+    .fc-box-item {
+      background: #ffffff;
+      border: 1px solid #16a34a;
+      border-radius: 4px;
+      width: 90%;
+      padding: 0.25rem;
+      font-size: 0.7rem;
+      text-align: center;
+      font-weight: 700;
+    }
+    .fc-ndk-box {
+      background: #e0f2fe; /* Light blue/cyan */
+      border: 2px solid #0284c7;
+      border-radius: 8px;
+      color: #0369a1;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-align: center;
+      width: 80%;
+      margin-top: 0.5rem;
+      position: relative;
+    }
+    .fc-ndk-red-line-1 {
+      position: absolute;
+      border-bottom: 3.5px solid #dc2626;
+      width: 110px;
+      left: -90px;
+      bottom: 25px;
+    }
+    .fc-ndk-red-line-1::after {
+      content: "◀";
+      color: #dc2626;
+      font-size: 0.7rem;
+      position: absolute;
+      left: -3px;
+      top: -5px;
+    }
+    .fc-ndk-red-line-2 {
+      position: absolute;
+      border-bottom: 3.5px solid #dc2626;
+      width: 120px;
+      left: -110px;
+      bottom: 40px;
+    }
+    .fc-ndk-red-line-2::after {
+      content: "◀";
+      color: #dc2626;
+      font-size: 0.7rem;
+      position: absolute;
+      left: -3px;
+      top: -5px;
     }
   </style>
 </head>
@@ -1233,7 +1446,7 @@
           <!-- Item 3: LCD (Pi B와 LCD가 부착된 pi_B_view.jpg로 수정) -->
           <div class="grid-card">
             <div class="card-img-box">
-              <img src="../images/pi_B_view.jpg" alt="Character LCD & Pi B">
+              <img src="../images/pi_B_view.jpg" alt="Character LCD & Pi B" style="object-position: center bottom;">
             </div>
             <h3>16x2 Character LCD</h3>
             <div class="card-caption">Focused 자원 명세 출력</div>
@@ -1346,39 +1559,55 @@
       </div>
       <div class="slide-content">
         <div class="uml-component-diag">
+          <!-- Component: User (유저) -->
+          <div class="uml-comp-node user-node" style="border-color: var(--color-blue); width: 22%; min-height: 250px;">
+            <div class="uml-comp-header" style="color: var(--color-blue);">«actor»<br>User (Browser)</div>
+            <div class="uml-comp-body">
+              <div class="uml-sub-comp">Dashboard Web UI (index.html)</div>
+              <div class="uml-sub-comp">REST API Polling Client (app.js)</div>
+            </div>
+          </div>
+
+          <!-- Interface Connectors: User to Pi A -->
+          <div class="uml-comp-connectors" style="width: 8%; gap: 1rem;">
+            <div class="uml-connector-arrow">
+              <div class="uml-conn-label" style="font-size: 0.75rem;">HTTP:80</div>
+              <div class="uml-arrow-line" style="background: var(--color-blue);"></div>
+            </div>
+          </div>
+
           <!-- Component: Pi A -->
-          <div class="uml-comp-node">
+          <div class="uml-comp-node" style="width: 27%; min-height: 250px;">
             <div class="uml-comp-header">«component»<br>Pi A (Web Gateway)</div>
             <div class="uml-comp-body">
-              <div class="uml-sub-comp">«component» Dashboard UI (app.js)</div>
-              <div class="uml-sub-comp">«component» CGI Client (update_status.py)</div>
+              <div class="uml-sub-comp">«component» Apache Web Server</div>
+              <div class="uml-sub-comp">«component» CGI (update_status.py)</div>
             </div>
           </div>
           
-          <!-- Interface Connectors -->
-          <div class="uml-comp-connectors">
+          <!-- Interface Connectors: Pi A to Pi B -->
+          <div class="uml-comp-connectors" style="width: 12%; gap: 1.5rem;">
             <div class="uml-connector-arrow">
-              <div class="uml-conn-label">«interface» TCP:50007 (Command)</div>
-              <div class="uml-arrow-line"></div>
+              <div class="uml-conn-label" style="font-size: 0.7rem;">TCP:50007 (Cmd)</div>
+              <div class="uml-arrow-line" style="background: var(--color-emerald);"></div>
             </div>
             <div class="uml-connector-arrow">
-              <div class="uml-conn-label">«interface» HTTP:5000 (Polling)</div>
-              <div class="uml-arrow-line left-arrow"></div>
+              <div class="uml-conn-label" style="font-size: 0.7rem;">HTTP:5000 (Poll)</div>
+              <div class="uml-arrow-line left-arrow" style="background: var(--color-amber);"></div>
             </div>
           </div>
           
           <!-- Component: Pi B -->
-          <div class="uml-comp-node alt">
+          <div class="uml-comp-node alt" style="width: 28%; min-height: 250px;">
             <div class="uml-comp-header">«component»<br>Pi B (Hardware Core)</div>
             <div class="uml-comp-body">
               <div class="uml-sub-comp">«component» Flask REST API</div>
               <div class="uml-sub-comp">«component» Socket Listener (Thread)</div>
-              <div class="uml-sub-comp">«component» Mutex Lock (state_lock)</div>
-              <div class="uml-sub-comp">«component» JSON DB (data.json)</div>
+              <div class="uml-sub-comp">«component» Mutex Lock & data.json</div>
             </div>
             <!-- Ports out to HW -->
-            <div class="uml-comp-hw-ports">
-              <div class="uml-hw-arrow">«port» GPIO ➔ LEDs / LCD / Buzzer</div>
+            <div class="uml-comp-hw-ports" style="margin-top: 0.5rem; padding-top: 0.4rem;">
+              <div class="uml-hw-arrow" style="font-size: 0.75rem;">«port» GPIO ➔ LEDs / LCD / Buzzer</div>
             </div>
           </div>
         </div>
@@ -1393,54 +1622,104 @@
     <div class="slide" id="slide-7">
       <div class="slide-header">
         <div>
-          <div class="slide-category">UML Sequence Diagram</div>
-          <h2 class="slide-title">5. 전체 시스템 연동 흐름도 (UML Sequence Diagram)</h2>
+          <div class="slide-category">System Flow Chart</div>
+          <h2 class="slide-title">5. 전체 시스템 연동 흐름도 (Flow Chart)</h2>
         </div>
         <div class="slide-num-badge">07 / 11</div>
       </div>
-      <div class="slide-content">
-        <div class="uml-sequence-diag">
-          <!-- Lifelines Header -->
-          <div class="uml-seq-headers">
-            <div class="uml-lifeline-head">🧑‍💻 User<br>(Dashboard)</div>
-            <div class="uml-lifeline-head">📟 Pi A<br>(Gateway)</div>
-            <div class="uml-lifeline-head">⚙️ Pi B<br>(Core Server)</div>
-            <div class="uml-lifeline-head">🚨 Hardware<br>(Actuators)</div>
+      <div class="slide-content" style="background: #ffffff; border-radius: 16px; padding: 0.5rem; overflow: hidden;">
+        <div class="flowchart-container">
+          <!-- PROCESS 1 -->
+          <div class="flowchart-col">
+            <div class="flowchart-col-title">PROCESS 1 (웹 클라이언트 및 CGI)</div>
+            
+            <div class="fc-shape fc-start-end">START<br>Web Portal</div>
+            <div class="fc-arrow">▼</div>
+            
+            <div class="fc-shape fc-init">
+              Apache Web &<br>
+              CGI Script Init<br>
+              (update_status.py)
+            </div>
+            <div class="fc-arrow">▼</div>
+            
+            <div class="fc-shape fc-rect" id="wait-control">웹 제어 대기</div>
+            <div class="fc-arrow">▼</div>
+            
+            <div class="fc-shape fc-decision">예약/반납<br>클릭?</div>
+            <div class="fc-arrow">▼ <span style="font-size:0.6rem; color:#ea580c; font-weight:bold; position:relative; top:-2px;">YES</span></div>
+            
+            <div class="fc-shape fc-rect">4자리 PIN<br>본인 확인 입력</div>
+            <div class="fc-arrow">▼</div>
+            
+            <div class="fc-shape fc-rect" style="border-color:#b91c1c; color:#b91c1c;">CGI 소켓 전송<br>(Port 50007)</div>
+            <div class="fc-arrow">▼</div>
+            
+            <div class="fc-shape fc-circle">SENSING</div>
+            
+            <!-- Loop arrow for Decision (NO) -->
+            <div class="fc-loop-arrow-left"></div>
+            <span style="font-size:0.6rem; color:#ea580c; font-weight:bold; position:absolute; left:22px; top:168px;">NO</span>
           </div>
           
-          <!-- Lifelines Body Container -->
-          <div class="uml-seq-body">
-            <!-- Vertical Lifeline Lines -->
-            <div class="uml-vertical-line col1"></div>
-            <div class="uml-vertical-line col2"></div>
-            <div class="uml-vertical-line col3"></div>
-            <div class="uml-vertical-line col4"></div>
+          <!-- SENSING / Polling -->
+          <div class="flowchart-col">
+            <div class="flowchart-col-title" style="background:#fffbeb; border-color:#eab308;">SENSING (상태 조회 및 갱신)</div>
             
-            <!-- Messages Rows -->
-            <div class="uml-msg-row">
-              <div class="uml-msg-arrow from1to2">1. 예약/사용 요청 (PIN 입력)</div>
+            <div class="fc-shape fc-circle">SENSING</div>
+            <div class="fc-arrow">▼</div>
+            
+            <div class="fc-shape fc-rect">5초 주기 REST API<br>조회 (/api/status)</div>
+            <div class="fc-arrow">▼</div>
+            
+            <div class="fc-shape fc-decision">자원 상태<br>변경 감지?</div>
+            <div class="fc-arrow">▼ <span style="font-size:0.6rem; color:#ea580c; font-weight:bold; position:relative; top:-2px;">YES</span></div>
+            
+            <div class="fc-shape fc-rect">웹 UI 예약 카드<br>비동기 화면 갱신</div>
+            <div class="fc-arrow">▼</div>
+            
+            <div class="fc-shape fc-rect">5초 후<br>비동기 재폴링</div>
+            
+            <!-- Loop arrow for Decision (NO) -->
+            <div class="fc-loop-arrow"></div>
+            <span style="font-size:0.6rem; color:#ea580c; font-weight:bold; position:absolute; right:20px; top:158px;">NO</span>
+          </div>
+          
+          <!-- PROCESS 2 / Pi B -->
+          <div class="flowchart-col" style="width:34%;">
+            <div class="flowchart-col-title">PROCESS 2 (Pi B 하드웨어 코어)</div>
+            
+            <div class="fc-shape fc-start-end" style="border-color:#16a34a; color:#16a34a;">START<br>Socket Daemon</div>
+            <div class="fc-arrow">▼</div>
+            
+            <div class="fc-shape fc-rect">TCP 소켓 수신 대기<br>(Port 50007)</div>
+            <div class="fc-arrow">▼</div>
+            
+            <div class="fc-shape fc-decision" style="width:70%;">패킷 수신 및<br>PIN 검증?</div>
+            <div class="fc-arrow">▼ <span style="font-size:0.6rem; color:#ea580c; font-weight:bold; position:relative; top:-2px;">YES</span></div>
+            
+            <div class="fc-shape fc-rect">Mutex Lock 획득 후<br>data.json DB 갱신</div>
+            <div class="fc-arrow">▼</div>
+            
+            <!-- Hardware feedback big box -->
+            <div class="fc-large-box">
+              <div class="fc-box-header">물리 피드백 및 액추에이터 제어</div>
+              <div class="fc-box-item">삼색 LED 상태별 점등 (초록/노랑/빨강)</div>
+              <div class="fc-box-item" style="background:#fef08a; border-color:#eab308;">16x2 LCD 자원 상태 영문 출력</div>
+              <div class="fc-box-item">피에조 부저 멜로디 연주 (상승/하강음)</div>
             </div>
-            <div class="uml-msg-row">
-              <div class="uml-msg-arrow from2to3">2. TCP Socket 전송 (Port 50007)</div>
+            
+            <!-- Daemon scheduler box -->
+            <div class="fc-ndk-box">
+              자동 회수 스케줄러 (1초 데몬 스레드)
+              <br><span style="font-size:0.6rem; font-weight:normal; color:#475569;">(노쇼 1분 폭파 / 사용한도 3분 회수)</span>
             </div>
-            <div class="uml-msg-row">
-              <div class="uml-msg-self col3">3. Mutex Lock 획득 & DB 파일 갱신</div>
-            </div>
-            <div class="uml-msg-row">
-              <div class="uml-msg-arrow from3to4">4. GPIO 제어 신호 출력</div>
-            </div>
-            <div class="uml-msg-row">
-              <div class="uml-msg-arrow from4to1 dashed">5. LED 상태색 점등, 부저 멜로디 및 LCD 텍스트 피드백</div>
-            </div>
-            <div class="uml-msg-row">
-              <div class="uml-msg-self col3">6. 만료 스케줄러 (1초 루프 감시 - No-show/사용 초과 강제 해제)</div>
-            </div>
-            <div class="uml-msg-row">
-              <div class="uml-msg-arrow from1to3">7. HTTP REST API 조회 (5초 주기 비동기 폴링)</div>
-            </div>
-            <div class="uml-msg-row">
-              <div class="uml-msg-arrow from3to1 dashed">8. JSON 전역 상태 및 타이머 카운트다운 정보 반환</div>
-            </div>
+            
+            <!-- Connection lines (red arrows like Android NDK in photo) -->
+            <!-- From large box to NDK-like scheduler -->
+            <div class="fc-ndk-red-line-1"></div>
+            <!-- From NDK-like scheduler to Process 1 client CGI or DB update -->
+            <div class="fc-ndk-red-line-2"></div>
           </div>
         </div>
       </div>
