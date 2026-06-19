@@ -20,6 +20,7 @@
       --color-emerald-glow: rgba(16, 185, 129, 0.15);
       --color-amber: #f59e0b;
       --color-amber-glow: rgba(245, 158, 11, 0.15);
+      --color-blue: #3b82f6;
       --color-red: #ef4444;
       --font-ko: 'Noto Sans KR', sans-serif;
       --font-en: 'Outfit', sans-serif;
@@ -54,7 +55,6 @@
       width: 96vw;
       height: 87vh;
       perspective: 1500px;
-      overflow: hidden; /* 슬라이드 가로 이동 시 바깥 영역 숨김 */
     }
 
     /* 개별 슬라이드 공통 */
@@ -67,7 +67,7 @@
       background: var(--bg-card);
       border: 1px solid var(--bg-card-border);
       border-radius: 24px;
-      padding: 3.5rem 4rem;
+      padding: 3.2rem 4rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -101,7 +101,7 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 1rem;
+      padding-bottom: 0.8rem;
     }
 
     .slide-category {
@@ -135,7 +135,7 @@
       flex-grow: 1;
       display: flex;
       align-items: center;
-      margin: 1.5rem 0;
+      margin: 1.2rem 0;
       overflow: hidden;
       width: 100%;
     }
@@ -148,7 +148,7 @@
       font-size: 0.9rem;
       color: var(--text-muted);
       border-top: 1px solid rgba(255, 255, 255, 0.05);
-      padding-top: 1rem;
+      padding-top: 0.8rem;
     }
 
     /* 타이틀 슬라이드 (Slide 1) */
@@ -217,7 +217,7 @@
     .toc-layout {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.9rem;
       width: 100%;
     }
 
@@ -225,7 +225,7 @@
       background: rgba(15, 23, 42, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.04);
       border-radius: 16px;
-      padding: 1rem 2rem;
+      padding: 0.9rem 2rem;
       display: flex;
       align-items: center;
       gap: 2rem;
@@ -262,18 +262,20 @@
       color: var(--text-muted);
     }
 
-    /* 2단 레이아웃 (Slide 3) */
+    /* 2단 레이아웃 (일러스트 분할 뷰) */
     .two-col-layout {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 2.5rem;
       width: 100%;
+      height: 100%;
+      align-items: center;
     }
 
     .col-card {
       background: rgba(15, 23, 42, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.03);
-      padding: 2rem;
+      padding: 1.75rem;
       border-radius: 20px;
     }
 
@@ -299,9 +301,9 @@
     }
 
     .bullet-list li {
-      margin-bottom: 1rem;
+      margin-bottom: 0.9rem;
       line-height: 1.6;
-      font-size: 1rem;
+      font-size: 0.95rem;
       position: relative;
       padding-left: 1.4rem;
       color: #e2e8f0;
@@ -325,26 +327,46 @@
       border-left: 5px solid var(--color-amber);
       padding: 0.8rem 1.5rem;
       border-radius: 0 10px 10px 0;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 500;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
       display: flex;
       align-items: center;
       gap: 0.6rem;
     }
 
-    /* 4단 그리드 레이아웃 (Slide 4 & Slide 8 & Slide 10) */
+    .illustration-box {
+      width: 100%;
+      height: 100%;
+      min-height: 350px;
+      background: rgba(15, 23, 42, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .illustration-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 4단 그리드 레이아웃 (사용 장비) */
     .four-col-layout {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
+      gap: 1rem;
       width: 100%;
     }
 
     .grid-card {
       background: rgba(15, 23, 42, 0.4);
       border: 1px solid rgba(255, 255, 255, 0.04);
-      padding: 1.75rem 1.25rem;
+      padding: 1.25rem 1rem;
       border-radius: 20px;
       display: flex;
       flex-direction: column;
@@ -359,21 +381,21 @@
     }
 
     .grid-card .card-icon {
-      font-size: 2.6rem;
-      margin-bottom: 0.8rem;
+      font-size: 2.2rem;
+      margin-bottom: 0.4rem;
     }
 
     .grid-card h3 {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       color: var(--text-white);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.25rem;
       font-weight: 700;
     }
 
     .grid-card .card-caption {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--color-emerald);
-      margin-bottom: 1.2rem;
+      margin-bottom: 0.8rem;
       font-weight: 500;
     }
 
@@ -388,10 +410,10 @@
     }
 
     .grid-card ul li {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       color: #cbd5e1;
-      margin-bottom: 0.6rem;
-      line-height: 1.5;
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
       padding-left: 0.8rem;
       position: relative;
     }
@@ -407,191 +429,292 @@
       color: var(--color-amber);
     }
 
-    /* 일정/타임라인 레이아웃 (Slide 5) */
-    .timeline-layout {
-      display: flex;
-      justify-content: space-between;
-      align-items: stretch;
+    /* 장비 이미지 썸네일 박스 */
+    .card-img-box {
       width: 100%;
-      gap: 1.5rem;
-      position: relative;
+      height: 120px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      margin-bottom: 0.8rem;
     }
 
-    .timeline-card {
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid var(--bg-card-border);
-      border-radius: 20px;
-      padding: 2rem 1.5rem;
-      flex: 1;
+    .card-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 간트 차트 (프로젝트 일정표) */
+    .gantt-chart-container {
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
+      justify-content: center;
+    }
+
+    .gantt-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+
+    .gantt-table th, .gantt-table td {
+      padding: 1.1rem 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      text-align: left;
+    }
+
+    .gantt-table th {
+      background: rgba(30, 41, 59, 0.8);
+      font-weight: 700;
+      color: var(--color-emerald);
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .gantt-table th.col-week {
+      text-align: center;
+      width: 25%;
+    }
+
+    .gantt-row-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-white);
+      width: 25%;
+    }
+
+    .gantt-bar-container {
       position: relative;
-      z-index: 2;
+      width: 100%;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.03);
     }
 
-    .timeline-card.active-step {
-      border-color: var(--color-emerald);
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.12);
+    .gantt-bar {
+      height: 100%;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      padding-left: 1rem;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #0f172a;
     }
 
-    .timeline-card.mid-step {
+    .gantt-bar.w1 {
+      width: 33.33%;
+      background: linear-gradient(90deg, var(--color-emerald), #34d399);
+    }
+
+    .gantt-bar.w2 {
+      width: 33.33%;
+      margin-left: 33.33%;
+      background: linear-gradient(90deg, var(--color-amber), #fbbf24);
+    }
+
+    .gantt-bar.w3 {
+      width: 33.33%;
+      margin-left: 66.66%;
+      background: linear-gradient(90deg, var(--color-blue), #60a5fa);
+    }
+
+    .gantt-bar.w12 {
+      width: 66.66%;
+      background: linear-gradient(90deg, var(--color-emerald), var(--color-amber));
+    }
+
+    .gantt-bar.w23 {
+      width: 66.66%;
+      margin-left: 33.33%;
+      background: linear-gradient(90deg, var(--color-amber), var(--color-blue));
+    }
+
+    .gantt-bar.w123 {
+      width: 100%;
+      background: linear-gradient(90deg, var(--color-emerald), var(--color-amber), var(--color-blue));
+    }
+
+    /* 구성도 다이어그램 (Slide 6) */
+    .diag-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      padding: 0 1rem;
+      position: relative;
+    }
+
+    .diag-node {
+      background: rgba(30, 41, 59, 0.85);
+      border: 2px solid var(--color-emerald);
+      border-radius: 20px;
+      padding: 1.8rem;
+      width: 31%;
+      min-height: 310px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      z-index: 5;
+    }
+
+    .diag-node.networks {
+      border-color: var(--color-blue);
+      min-height: 220px;
+      justify-content: center;
+      align-items: center;
+      width: 28%;
+      position: relative;
+    }
+
+    .diag-node.pi-b {
       border-color: var(--color-amber);
     }
 
-    .timeline-step-title {
+    .diag-node h3 {
       font-size: 1.25rem;
+      margin-bottom: 1.2rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 0.6rem;
       font-weight: 700;
-      color: var(--color-emerald);
-      margin-bottom: 0.35rem;
     }
 
-    .timeline-card.mid-step .timeline-step-title {
-      color: var(--color-amber);
-    }
-
-    .timeline-date {
-      font-family: var(--font-en);
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-bottom: 1.5rem;
-    }
-
-    .timeline-card ul {
+    .diag-sub-list {
       list-style: none;
+      font-size: 0.9rem;
     }
 
-    .timeline-card ul li {
-      font-size: 0.95rem;
-      color: #e2e8f0;
-      line-height: 1.6;
+    .diag-sub-list li {
       margin-bottom: 0.8rem;
+      color: #e2e8f0;
       padding-left: 1rem;
       position: relative;
+      line-height: 1.5;
     }
 
-    .timeline-card ul li::before {
-      content: "•";
+    .diag-sub-list li::before {
+      content: "▪";
       position: absolute;
       left: 0;
       color: var(--color-emerald);
     }
 
-    .timeline-card.mid-step ul li::before {
+    .diag-node.pi-b .diag-sub-list li::before {
       color: var(--color-amber);
     }
 
-    .timeline-arrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-amber);
-      font-size: 2rem;
-      font-weight: bold;
-    }
-
-    /* 3단 카드 레이아웃 (Slide 6) */
-    .three-col-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 2rem;
-      width: 100%;
-    }
-
-    .feature-card {
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      padding: 2rem 1.5rem;
-      border-radius: 20px;
+    .diag-connector {
       display: flex;
       flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+      align-items: center;
+    }
+
+    .connector-line {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      height: 2px;
+      position: relative;
+    }
+
+    /* 세로형 타임라인 흐름도 (Slide 7) */
+    .flow-timeline {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      width: 100%;
+      padding-left: 3rem;
+      margin: 1rem 0;
+    }
+
+    .flow-timeline::before {
+      content: "";
+      position: absolute;
+      left: 1.2rem;
+      top: 10px;
+      bottom: 10px;
+      width: 4px;
+      background: linear-gradient(to bottom, var(--color-emerald), var(--color-amber), var(--color-blue));
+      border-radius: 99px;
+    }
+
+    .flow-node {
+      position: relative;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      padding: 0.85rem 1.75rem;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
       transition: all 0.3s ease;
     }
 
-    .feature-card:hover {
-      transform: translateY(-8px);
-      border-color: rgba(255, 255, 255, 0.1);
+    .flow-node:hover {
+      background: rgba(30, 41, 59, 0.5);
+      border-color: rgba(255, 255, 255, 0.08);
+      transform: translateX(5px);
     }
 
-    .feature-card h3 {
-      font-size: 1.25rem;
-      color: var(--color-emerald);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-    }
-
-    .feature-card.alt h3 {
-      color: var(--color-amber);
-    }
-
-    .feature-card p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 1.2rem;
-    }
-
-    .feature-card ul {
-      list-style: none;
-    }
-
-    .feature-card ul li {
-      font-size: 0.9rem;
-      color: #e2e8f0;
-      margin-bottom: 0.7rem;
-      line-height: 1.6;
-      padding-left: 1rem;
-      position: relative;
-    }
-
-    .feature-card ul li::before {
-      content: "-";
+    .flow-node::after {
+      content: "";
       position: absolute;
-      left: 0;
-      color: var(--color-emerald);
+      left: -2.15rem;
+      top: calc(50% - 10px);
+      width: 20px;
+      height: 20px;
+      background: var(--bg-dark);
+      border: 4px solid var(--color-emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--color-emerald);
+      z-index: 10;
+      transition: all 0.3s ease;
     }
 
-    .feature-card.alt ul li::before {
-      color: var(--color-amber);
+    .flow-node:hover::after {
+      transform: scale(1.2);
     }
 
-    /* 흐름도 레이아웃 (Slide 7) */
-    .flowchart-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      width: 100%;
+    .flow-node:nth-child(even)::after {
+      border-color: var(--color-amber);
+      box-shadow: 0 0 10px var(--color-amber);
     }
 
-    .flow-step {
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      border-radius: 14px;
-      padding: 0.75rem 1.75rem;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      border-left: 5px solid var(--color-emerald);
+    .flow-node:last-child::after {
+      border-color: var(--color-blue);
+      box-shadow: 0 0 10px var(--color-blue);
     }
 
-    .flow-step:nth-child(even) {
-      border-left-color: var(--color-amber);
-    }
-
-    .flow-step-num {
-      font-size: 0.95rem;
+    .flow-node-title {
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--color-emerald);
-      min-width: 170px;
+      min-width: 200px;
     }
 
-    .flow-step:nth-child(even) .flow-step-num {
+    .flow-node:nth-child(even) .flow-node-title {
       color: var(--color-amber);
     }
 
-    .flow-step-desc {
+    .flow-node:last-child .flow-node-title {
+      color: var(--color-blue);
+    }
+
+    .flow-node-desc {
       font-size: 0.9rem;
       color: #f1f5f9;
       line-height: 1.5;
@@ -698,8 +821,8 @@
 
     .conclusion-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
     }
 
     .concl-item {
@@ -887,7 +1010,7 @@
       </div>
     </div>
 
-    <!-- SLIDE 3: Problem & Objective -->
+    <!-- SLIDE 3: Problem & Objective (AI 일러스트 분할 배치) -->
     <div class="slide" id="slide-3">
       <div class="slide-header">
         <div>
@@ -897,27 +1020,29 @@
         <div class="slide-num-badge">03 / 11</div>
       </div>
       <div class="slide-content">
-        <div style="width: 100%;">
-          <div class="callout-banner">
-            💡 공용 자원의 고질적 문제인 무단 점유와 예약 노쇼(No-Show)를 시스템적 매커니즘으로 해결
-          </div>
-          <div class="two-col-layout">
-            <div class="col-card left-card">
-              <h3>🚨 기존 공용 자원 관리의 한계</h3>
+        <div class="two-col-layout">
+          <div>
+            <div class="callout-banner">
+              💡 공용 자원의 무단 점유와 예약 노쇼(No-Show)를 시스템적으로 해결
+            </div>
+            <div class="col-card left-card" style="margin-bottom: 1rem;">
+              <h3>🚨 기존 공용 자원의 한계</h3>
               <ul class="bullet-list">
-                <li><strong>비인가 사용 및 무단 점유:</strong> 예약 정보가 웹에 실시간 연동되지 않고 현장 확인만 가능하여 타인의 예약을 임의 취소하거나 가로채는 마찰 발생</li>
-                <li><strong>예약 No-Show 독점 문제:</strong> 예약만 올려두고 방문 및 점유를 하지 않아 자원이 불필요하게 대기 상태로 방치되고 타인의 이용 권리가 침해됨</li>
-                <li><strong>물리 피드백 결여:</strong> 대시보드를 계속 쳐다보지 않으면 현장 부품의 예약이나 잔여 시간 경과 여부를 주변 사람들이 눈치채기 어려움</li>
+                <li><strong>비인가 무단 점유:</strong> 예약 정보가 없어 가로채거나 비인가자가 기기를 차지하여 갈등 발생</li>
+                <li><strong>노쇼(No-Show) 자원 독점:</strong> 예약만 해 둔 채 방치하여 실사용자가 쓰지 못하는 자원 낭비</li>
               </ul>
             </div>
             <div class="col-card right-card">
-              <h3>✅ 스마트 예약 시스템의 해결 대안</h3>
+              <h3>✅ 본 프로젝트의 해결책</h3>
               <ul class="bullet-list">
-                <li><strong>웹 실시간 대시보드:</strong> 5초 단위의 브라우저 비동기 HTTP 폴링을 이용하여 원격에서도 모든 기기의 예약 상황을 동기화하여 시각화</li>
-                <li><strong>PIN 기반 도용 차단:</strong> 로그인 절차 대신 예약 시 설정하는 4자리 PIN을 대조해 본인 인증을 수행하여 타인의 해제와 취소를 차단</li>
-                <li><strong>만료 스케줄러 도입:</strong> 백그라운드 스레드가 예약 후 노쇼 시(1분 미사용) 강제 폭파하고 사용 한도(3분) 초과 시 자동 반납 처리</li>
+                <li><strong>웹 대시보드 & PIN 보안:</strong> 5초 단위 조회 웹 및 4자리 비밀번호 본인 확인으로 도용 완전 방지</li>
+                <li><strong>만료 스케줄러:</strong> 예약 노쇼 시 1분 내 자동 폭파, 사용 3분 초과 시 강제 자동 반납 처리</li>
               </ul>
             </div>
+          </div>
+          <!-- AI 일러스트 영역 -->
+          <div class="illustration-box">
+            <img src="../images/background_need_illustration.png" alt="개발 배경 일러스트">
           </div>
         </div>
       </div>
@@ -927,7 +1052,7 @@
       </div>
     </div>
 
-    <!-- SLIDE 4: Equipment Used (사용 장비) -->
+    <!-- SLIDE 4: Equipment Used (사용 장비 - 사진 추가) -->
     <div class="slide" id="slide-4">
       <div class="slide-header">
         <div>
@@ -940,45 +1065,50 @@
         <div class="four-col-layout">
           <!-- Item 1: RPi -->
           <div class="grid-card">
-            <div class="card-icon">🖥️</div>
+            <div class="card-img-box">
+              <img src="../images/pi_B_view.jpg" alt="Raspberry Pi 4">
+            </div>
             <h3>라즈베리 파이 4 (2대)</h3>
             <div class="card-caption">시스템 제어 핵심 코어</div>
             <ul>
-              <li><strong>Pi A:</strong> Apache 웹서버 구동, CGI 소켓 통신을 담당하는 웹 게이트웨이</li>
-              <li><strong>Pi B:</strong> Flask REST API 서빙, 물리 GPIO 드라이버 제어 코어</li>
+              <li><strong>Pi A:</strong> Apache 구동 웹 게이트웨이 및 소켓 클라이언트</li>
+              <li><strong>Pi B:</strong> Flask API 및 물리 GPIO 구동 코어 서버</li>
             </ul>
           </div>
           <!-- Item 2: LEDs -->
           <div class="grid-card">
-            <div class="card-icon">🚨</div>
+            <div class="card-img-box">
+              <img src="../images/breadboard_view.jpg" alt="RGB LEDs">
+            </div>
             <h3>삼색 LED (3개)</h3>
             <div class="card-caption">직관적 상태 시각 피드백</div>
             <ul>
-              <li>자원의 현재 예약 현황을 멀리서도 3색 신호등 방식으로 즉시 파악</li>
-              <li><strong>초록:</strong> 대기 상태(Available)</li>
-              <li><strong>노랑:</strong> 예약 완료(Reserved)</li>
-              <li><strong>빨강:</strong> 사용 중(In Use)</li>
+              <li>멀리서도 자원 현황을 즉시 확인 가능한 LED 신호등 구성</li>
+              <li>초록(대기), 노랑(예약), 빨강(사용)으로 즉각 동기화</li>
             </ul>
           </div>
           <!-- Item 3: LCD -->
           <div class="grid-card">
-            <div class="card-icon">📟</div>
+            <div class="card-img-box">
+              <img src="../images/breadboard_view.jpg" alt="Character LCD">
+            </div>
             <h3>16x2 Character LCD</h3>
-            <div class="card-caption">포커스 기기 문자 디스플레이</div>
+            <div class="card-caption">Focused 자원 명세 출력</div>
             <ul>
-              <li>웹에서 지정한 Focus 장치의 이름과 세부 상태를 영문 텍스트로 실시간 표기</li>
-              <li>가변저항(Vo 핀) 조절을 통해 밝기 대비(Contrast) 하드웨어 제어</li>
+              <li>현재 지정 모니터링 대상인 자원의 영문명 및 상태 정보 출력</li>
+              <li>가변저항 회로 설계를 통해 글자 선명도(Contrast) 물리 제어</li>
             </ul>
           </div>
           <!-- Item 4: Buzzer -->
           <div class="grid-card">
-            <div class="card-icon">🔊</div>
+            <div class="card-img-box">
+              <img src="../images/breadboard_view.jpg" alt="Piezo Buzzer">
+            </div>
             <h3>피에조 패시브 부저</h3>
             <div class="card-caption">상태 전이 멜로디 연주</div>
             <ul>
-              <li>PWM 주파수 변조 제어를 통해 상태 변화 완료를 청각 알림</li>
-              <li><strong>사용 시작:</strong> 도-미-솔 상승음 출력</li>
-              <li><strong>예약 만료/반납:</strong> 솔-미-도 하강음 출력</li>
+              <li>PWM 주파수 변조를 이용한 예약-사용-반납 음계 연주</li>
+              <li>사용 전환 시 상승음(도미솔), 만료 반납 시 하강음(솔미도) 출력</li>
             </ul>
           </div>
         </div>
@@ -989,49 +1119,71 @@
       </div>
     </div>
 
-    <!-- SLIDE 5: Development Schedule (개발 일정) -->
+    <!-- SLIDE 5: Development Schedule (프로젝트 일정표 Gantt 차트) -->
     <div class="slide" id="slide-5">
       <div class="slide-header">
         <div>
           <div class="slide-category">Development Timeline</div>
-          <h2 class="slide-title">3. 개발 일정 및 주차별 수행 명세</h2>
+          <h2 class="slide-title">3. 개발 일정 및 수행 명세 (Gantt Chart)</h2>
         </div>
         <div class="slide-num-badge">05 / 11</div>
       </div>
       <div class="slide-content">
-        <div class="timeline-layout">
-          <!-- Step 1 -->
-          <div class="timeline-card active-step">
-            <div class="timeline-step-title">📅 1주차: 기획 및 회로 설계</div>
-            <div class="timeline-date">2026.06.04 ~ 2026.06.10</div>
-            <ul>
-              <li>프로젝트 주제 선정 및 요구사항 구체화</li>
-              <li>라즈베리 파이 2대 연동 통신 구조 설계</li>
-              <li>GPIO 핀 맵 구성 및 브레드보드 회로 배선도 설계 (가변저항 contrast 조절 포함)</li>
-            </ul>
-          </div>
-          <div class="timeline-arrow">➔</div>
-          <!-- Step 2 -->
-          <div class="timeline-card mid-step">
-            <div class="timeline-step-title">📅 2주차: 기능 개발 및 프로그래밍</div>
-            <div class="timeline-date">2026.06.11 ~ 2026.06.17</div>
-            <ul>
-              <li>Pi A: Apache 설정 및 CGI 파이썬 스크립트 작성</li>
-              <li>Pi B: Flask API 설계 및 소켓 수신 백그라운드 구현</li>
-              <li>하드웨어 모듈화 코딩 및 더미(가상 콘솔 박스) 연동 모드 구현</li>
-            </ul>
-          </div>
-          <div class="timeline-arrow">➔</div>
-          <!-- Step 3 -->
-          <div class="timeline-card active-step">
-            <div class="timeline-step-title">📅 3주차: 통합 검증 및 디버깅</div>
-            <div class="timeline-date">2026.06.18 ~ 2026.06.25</div>
-            <ul>
-              <li>CGI-소켓 통신 데이터 매핑 에러 디버깅</li>
-              <li>타이머 스케줄러 데몬 타임아웃 엣지 케이스 시나리오 유닛 테스트 진행</li>
-              <li>setup.sh 설치 쉘 스크립트 자동화 및 서비스 데몬 등록 최종 검증</li>
-            </ul>
-          </div>
+        <div class="gantt-chart-container">
+          <table class="gantt-table">
+            <thead>
+              <tr>
+                <th>수행 항목 (Task Name)</th>
+                <th class="col-week">1주차 (06.04~06.10)</th>
+                <th class="col-week">2주차 (06.11~06.17)</th>
+                <th class="col-week">3주차 (06.18~06.25)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="gantt-row-title">📋 요구사항 정의 및 기획</td>
+                <td colspan="3">
+                  <div class="gantt-bar w1">자원 기획 및 명세 정의</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="gantt-row-title">⚡ 회로 설계 및 부품 구성</td>
+                <td colspan="3">
+                  <div class="gantt-bar w1">GPIO 회로 배선도 수립</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="gantt-row-title">📟 Web & CGI 서버 개발 (Pi A)</td>
+                <td colspan="3">
+                  <div class="gantt-bar w2">Apache 웹 리소스 & CGI 개발</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="gantt-row-title">⚙️ Flask & Socket 개발 (Pi B)</td>
+                <td colspan="3">
+                  <div class="gantt-bar w2">REST API 및 소켓 리스너 개발</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="gantt-row-title">🚨 하드웨어 제어 모듈 코딩</td>
+                <td colspan="3">
+                  <div class="gantt-bar w2">LED/LCD/Buzzer 드라이버 구현</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="gantt-row-title">🧪 통합 연동 및 디버깅</td>
+                <td colspan="3">
+                  <div class="gantt-bar w3">소켓 통신 데이터 검증</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="gantt-row-title">🔒 스케줄러 안정화 및 배포</td>
+                <td colspan="3">
+                  <div class="gantt-bar w3">데몬 서비스 등록 & setup.sh 제작</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <div class="slide-footer">
@@ -1040,45 +1192,52 @@
       </div>
     </div>
 
-    <!-- SLIDE 6: Overall System Structure -->
+    <!-- SLIDE 6: Overall System Structure (구성도 시각화 다이어그램) -->
     <div class="slide" id="slide-6">
       <div class="slide-header">
         <div>
           <div class="slide-category">System Architecture</div>
-          <h2 class="slide-title">4. 전체 시스템 구성도</h2>
+          <h2 class="slide-title">4. 전체 시스템 구성 다이어그램</h2>
         </div>
         <div class="slide-num-badge">06 / 11</div>
       </div>
       <div class="slide-content">
-        <div class="three-col-layout">
-          <!-- Pi A -->
-          <div class="feature-card">
+        <div class="diag-container">
+          <!-- Node 1: Pi A -->
+          <div class="diag-node">
             <h3>📟 Pi A (Web Gateway)</h3>
-            <p>사용자 브라우저 접속 수용 및 신호 릴레이 게이트웨이</p>
-            <ul>
-              <li><strong>Apache2 호스팅:</strong> 포트 80에서 대시보드 리소스(HTML, app.js) 서빙</li>
-              <li><strong>ExecCGI 모듈:</strong> 웹 브라우저의 비동기 상태 변경 요청 접수</li>
-              <li><strong>CGI Script (Python):</strong> 전달받은 명령을 해석하여 Pi B로 저지연 TCP 소켓 중계 송신</li>
+            <ul class="diag-sub-list">
+              <li><strong>Apache Web Server:</strong> 포트 80에서 대시보드 서빙</li>
+              <li><strong>index.html & app.js:</strong> 웹 UI 렌더링 및 1초 단위 타이머 카운트다운</li>
+              <li><strong>CGI (update_status.py):</strong> 웹 요청 접수 및 Pi B 소켓 송신</li>
             </ul>
           </div>
-          <!-- Network -->
-          <div class="feature-card alt">
-            <h3>🔌 이원화 통신 파이프라인</h3>
-            <p>지연시간 최소화와 서버 부하 방지를 위한 하이브리드 결합</p>
-            <ul>
-              <li><strong>제어 명령 (저지연):</strong> 웹 요청 발생 시 Pi A CGI와 Pi B TCP 소켓 리스너 간의 Raw TCP 통신(포트 50007)을 사용해 즉시 하드웨어 구동</li>
-              <li><strong>상태 조회 (REST API):</strong> 사용자 대시보드 갱신을 위해 Pi B의 Flask API(포트 5000)를 5초마다 비동기 호출</li>
-            </ul>
+          
+          <!-- Node 2: Connection Channels -->
+          <div class="diag-node networks">
+            <h3>🔌 연동 네트워크망</h3>
+            <div class="diag-connector">
+              <div style="font-size: 0.78rem; text-align: center; color: var(--color-emerald); font-weight: bold;">
+                [제어 명령] TCP Socket (Port 50007)
+              </div>
+              <div class="connector-line" style="background: var(--color-emerald);"></div>
+              
+              <div style="font-size: 0.78rem; text-align: center; color: var(--color-amber); font-weight: bold;">
+                [상태 조회] HTTP REST API (Port 5000)
+              </div>
+              <div class="connector-line" style="background: var(--color-amber);"></div>
+            </div>
           </div>
-          <!-- Pi B -->
-          <div class="feature-card">
+          
+          <!-- Node 3: Pi B -->
+          <div class="diag-node pi-b">
             <h3>⚙️ Pi B (Hardware Core)</h3>
-            <p>자원 예약 로직 처리 및 물리 액추에이터 제어 본부</p>
-            <ul>
-              <li><strong>Flask API Server:</strong> 예약 데이터 처리 및 잔여 카운트다운 시간 계산 결과 서빙</li>
-              <li><strong>Socket Listener Thread:</strong> 백그라운드 데몬 스레드로 기동하여 Pi A의 제어 요청 상시 대기</li>
-              <li><strong>데이터 잠금 (Mutex Lock):</strong> 다중 스레드(Flask/Socket)의 DB 동시 접근 경쟁 상태(Race Condition) 방지</li>
-              <li><strong>JSON DB:</strong> 예약 상태를 data.json에 영속 보관</li>
+            <ul class="diag-sub-list">
+              <li><strong>Flask REST API:</strong> 전역 예약 상태 JSON 반환</li>
+              <li><strong>Socket Thread:</strong> TCP 포트 50007에서 실시간 제어 수신</li>
+              <li><strong>state_lock:</strong> Mutex Lock을 통한 스레드 안전성 확보</li>
+              <li><strong>data.json DB:</strong> 상태 데이터 영속성 기록</li>
+              <li><strong>GPIO 제어:</strong> LED/LCD/부저 직접 구동</li>
             </ul>
           </div>
         </div>
@@ -1089,40 +1248,46 @@
       </div>
     </div>
 
-    <!-- SLIDE 7: Overall Flowchart (전체 흐름도) -->
+    <!-- SLIDE 7: Overall Flowchart (연동 흐름도 시각화) -->
     <div class="slide" id="slide-7">
       <div class="slide-header">
         <div>
           <div class="slide-category">System Flowchart</div>
-          <h2 class="slide-title">5. 전체 시스템 연동 흐름도</h2>
+          <h2 class="slide-title">5. 전체 시스템 연동 흐름도 (Timeline Flow)</h2>
         </div>
         <div class="slide-num-badge">07 / 11</div>
       </div>
       <div class="slide-content">
-        <div class="flowchart-layout">
-          <div class="flow-step">
-            <div class="flow-step-num">1. 웹 예약/제어 요청</div>
-            <div class="flow-step-desc">사용자가 브라우저 대시보드(index.html)에서 예약 버튼을 누르고 본인 확인용 4자리 비밀번호(PIN) 설정 및 전달</div>
+        <div class="flow-timeline">
+          <!-- Step 1 -->
+          <div class="flow-node">
+            <div class="flow-node-title">1. 웹 예약/제어 요청</div>
+            <div class="flow-node-desc">사용자가 브라우저 대시보드(index.html)에서 예약 신청 및 4자리 본인 식별용 PIN번호 설정</div>
           </div>
-          <div class="flow-step">
-            <div class="flow-step-num">2. CGI 소켓 송신</div>
-            <div class="flow-step-desc">Pi A Apache 서버의 CGI 스크립트(update_status.py)가 비동기 요청을 가로채 Pi B의 포트 50007로 소켓 패킷 즉각 릴레이</div>
+          <!-- Step 2 -->
+          <div class="flow-node">
+            <div class="flow-node-title">2. CGI 소켓 포워딩</div>
+            <div class="flow-node-desc">Pi A Apache 서버의 CGI 스크립트가 요청을 소켓 데이터로 포맷팅하여 Pi B의 포트 50007로 저지연 TCP 송출</div>
           </div>
-          <div class="flow-step">
-            <div class="flow-step-num">3. 소켓 수신 & Mutex Lock</div>
-            <div class="flow-step-desc">Pi B 백그라운드 소켓 리스너 스레드가 이를 감지, Flask API 조회 스레드와 데이터 충돌을 방지하기 위해 Mutex Lock 획득 후 data.json 갱신</div>
+          <!-- Step 3 -->
+          <div class="flow-node">
+            <div class="flow-node-title">3. 소켓 수신 & Mutex Lock</div>
+            <div class="flow-node-desc">Pi B 백그라운드 소켓 스레드가 데이터를 접수하고, Flask 조회 스레드와의 데이터 레이싱을 막기 위해 Mutex Lock을 얻어 data.json 갱신</div>
           </div>
-          <div class="flow-step">
-            <div class="flow-step-num">4. 하드웨어 물리 제어</div>
-            <div class="flow-step-desc">갱신된 상태에 따라 GPIO 모듈 동작 (LED 상태등 변환, 피에조 부저 도-미-솔 연주, Focused LCD 텍스트 갱신) 후 락 해제</div>
+          <!-- Step 4 -->
+          <div class="flow-node">
+            <div class="flow-node-title">4. 하드웨어 피드백 구동</div>
+            <div class="flow-step-desc">변경된 상태값에 맞추어 GPIO 액추에이터 제어 (LED 색 변경, 피에조 부저 도-미-솔 재생, Focused LCD 텍스트 갱신)</div>
           </div>
-          <div class="flow-step">
-            <div class="flow-step-num">5. 백그라운드 스케줄러</div>
-            <div class="flow-step-desc">Pi B 내부의 데몬 스레드가 1초마다 루프를 돌며 예약 대기시간 초과(노쇼 1분) 및 사용 한도(3분) 초과 기기를 대기(Idle) 상태로 강제 복구</div>
+          <!-- Step 5 -->
+          <div class="flow-node">
+            <div class="flow-node-title">5. 타이머 만료 감시 데몬</div>
+            <div class="flow-node-desc">Pi B 백그라운드 데몬 스레드가 1초 주기로 돌며 노쇼 만료(1분) 및 사용 시간초과(3분) 검출 시 즉각 강제 대기 반납</div>
           </div>
-          <div class="flow-step">
-            <div class="flow-step-num">6. 실시간 웹 화면 동기화</div>
-            <div class="flow-step-desc">웹 프론트엔드가 5초마다 비동기 AJAX를 통해 Flask API를 조회하여 갱신된 점유 정보와 남은 시간 타이머를 대시보드에 렌더링</div>
+          <!-- Step 6 -->
+          <div class="flow-node">
+            <div class="flow-node-title">6. 웹 화면 실시간 동기화</div>
+            <div class="flow-node-desc">브라우저가 5초마다 Flask API(/api/status)를 비동기 호출해 전역 상태 및 타이머 카운트다운을 대시보드에 업데이트</div>
           </div>
         </div>
       </div>
@@ -1191,7 +1356,7 @@
       </div>
     </div>
 
-    <!-- SLIDE 9: Actual Operating Image (Placeholder) -->
+    <!-- SLIDE 9: Actual Operating Image (시연 화면) -->
     <div class="slide" id="slide-9">
       <div class="slide-header">
         <div>
@@ -1238,7 +1403,7 @@
       </div>
     </div>
 
-    <!-- SLIDE 10: Future Potential (향후 발전 가능성) -->
+    <!-- SLIDE 10: Future Potential (향후 발전 가능성 - AI 일러스트 탑재) -->
     <div class="slide" id="slide-10">
       <div class="slide-header">
         <div>
@@ -1248,46 +1413,52 @@
         <div class="slide-num-badge">10 / 11</div>
       </div>
       <div class="slide-content">
-        <div class="four-col-layout">
-          <!-- Firebase -->
-          <div class="grid-card">
-            <div class="card-icon">🌐</div>
-            <h3>클라우드 DB 확장</h3>
-            <div class="card-caption">AWS / Firebase 연동</div>
-            <ul>
-              <li>로컬 data.json 데이터 저장소를 클라우드 분산 데이터베이스로 고도화</li>
-              <li>다수의 지점에 분산 설치된 자원을 통합 네트워크망을 통해 원격 동시 중앙 관리가 가능하게 확장</li>
-            </ul>
+        <div class="two-col-layout">
+          <div class="four-col-layout" style="grid-template-columns: 1fr 1fr; gap: 1rem; height: 100%;">
+            <!-- Firebase -->
+            <div class="grid-card" style="padding: 1rem;">
+              <div class="card-icon">🌐</div>
+              <h3>클라우드 DB 확장</h3>
+              <div class="card-caption">AWS / Firebase 연동</div>
+              <ul style="font-size: 0.8rem;">
+                <li>로컬 data.json 파일 DB를 클라우드 분산 RDB/NoSQL 구조로 전면 업그레이드</li>
+                <li>다수의 보관함 및 지점 자원을 글로벌 단위 단일 망 통합 모니터링 구조로 확장</li>
+              </ul>
+            </div>
+            <!-- FCM -->
+            <div class="grid-card" style="padding: 1rem;">
+              <div class="card-icon">📱</div>
+              <h3>모바일 앱 출시</h3>
+              <div class="card-caption">FCM 푸시 알림 접목</div>
+              <ul style="font-size: 0.8rem;">
+                <li>PWA 및 모바일 전용 하이브리드 앱을 배포하여 접근성 극대화</li>
+                <li>사용 기기 반납 1분 전 리마인드 푸시 및 비상시 강제 만료 즉각 앱 알림 송출</li>
+              </ul>
+            </div>
+            <!-- NFC -->
+            <div class="grid-card" style="padding: 1rem;">
+              <div class="card-icon">🔑</div>
+              <h3>생체 / NFC 인증</h3>
+              <div class="card-caption">간편 실물 카드 태깅</div>
+              <ul style="font-size: 0.8rem;">
+                <li>수동 PIN 패스코드 입력 외에 학생증/사원증 NFC 하드웨어 리더 리포지토리 연동</li>
+                <li>지문 인식 회로 등을 연계하여 높은 현장 보안성 및 원터치 편의 획득</li>
+              </ul>
+            </div>
+            <!-- AI -->
+            <div class="grid-card" style="padding: 1rem;">
+              <div class="card-icon">📈</div>
+              <h3>AI 자원 분석</h3>
+              <div class="card-caption">가동률 통계 예측</div>
+              <ul style="font-size: 0.8rem;">
+                <li>예약 부도(No-show) 데이터 누적 분석을 통한 AI 기반 예약 패널티 및 차등 부여</li>
+                <li>자원 배치 최적화 리포트 도출</li>
+              </ul>
+            </div>
           </div>
-          <!-- FCM -->
-          <div class="grid-card">
-            <div class="card-icon">📱</div>
-            <h3>모바일 하이브리드 앱</h3>
-            <div class="card-caption">FCM 푸시 알림 접목</div>
-            <ul>
-              <li>반응형 웹을 넘어 모바일 전용 앱 배포 및 FCM 푸시 알림 API 이식</li>
-              <li>예약 취소 1분 전 노쇼 리마인드 및 사용 제한 한도 초과 임박 알람 발송</li>
-            </ul>
-          </div>
-          <!-- NFC -->
-          <div class="grid-card">
-            <div class="card-icon">🔑</div>
-            <h3>NFC / 생체 인증</h3>
-            <div class="card-caption">원터치 간편 인증 고도화</div>
-            <ul>
-              <li>4자리 수동 PIN 번호 방식 외에 학생증/사원증 NFC 카드 인식 기능 접목</li>
-              <li>지문/생체 정보 리더기 회로를 추가하여 한 단계 높은 수준의 현장 본인 식별 확보</li>
-            </ul>
-          </div>
-          <!-- AI -->
-          <div class="grid-card">
-            <div class="card-icon">📈</div>
-            <h3>AI 사용률 통계 분석</h3>
-            <div class="card-caption">자원 배치 최적화</div>
-            <ul>
-              <li>자원 사용 빈도, 취소율, 예약 부도 빅데이터 누적 분석</li>
-              <li>예약 가중치 동적 조율 및 공용 공간 물품 배치 타당성 도출 알고리즘 수립</li>
-            </ul>
+          <!-- AI 일러스트 영역 -->
+          <div class="illustration-box">
+            <img src="../images/future_expansion_illustration.png" alt="향후 발전 일러스트">
           </div>
         </div>
       </div>
@@ -1297,7 +1468,7 @@
       </div>
     </div>
 
-    <!-- SLIDE 11: Conclusions & Expected Effects -->
+    <!-- SLIDE 11: Conclusions & Expected Effects (AI 일러스트 탑재) -->
     <div class="slide" id="slide-11">
       <div class="slide-header">
         <div>
@@ -1307,37 +1478,43 @@
         <div class="slide-num-badge">11 / 11</div>
       </div>
       <div class="slide-content">
-        <div class="conclusion-layout">
-          <h3>🌟 공유 자원의 낭비 예방과 공정한 사용 질서 구축</h3>
-          <div class="conclusion-grid">
-            <div class="concl-item">
-              <div class="concl-icon">✔</div>
-              <div class="concl-text">
-                <h4>무단 점유 및 오용 방지</h4>
-                <p>PIN 기반 자율 인증 체계로 무단 취소나 사용 가로채기를 철저히 예방하여 공동체의 불필요한 마찰을 줄이고 이용 신뢰성을 대폭 향상시킵니다.</p>
+        <div class="two-col-layout">
+          <div class="conclusion-layout">
+            <h3>🌟 공유 자원의 낭비 예방과 공정한 사용 질서 구축</h3>
+            <div class="conclusion-grid">
+              <div class="concl-item">
+                <div class="concl-icon">✔</div>
+                <div class="concl-text">
+                  <h4>무단 점유 및 오용 방지</h4>
+                  <p>PIN 기반 자율 인증 체계로 무단 취소나 사용 가로채기를 철저히 예방하여 공동체의 불필요한 마찰을 줄이고 이용 신뢰성을 대폭 향상시킵니다.</p>
+                </div>
+              </div>
+              <div class="concl-item">
+                <div class="concl-icon">✔</div>
+                <div class="concl-text">
+                  <h4>공용 인프라 관리의 소형화</h4>
+                  <p>회의실 같은 커다란 공간에 국한되었던 예약 시스템을 학과 공용 PC, 공유기, 소형 실습 키트 등 미세한 공용 물품 영역까지 손쉽게 확장하여 관리합니다.</p>
+                </div>
+              </div>
+              <div class="concl-item">
+                <div class="concl-icon">✔</div>
+                <div class="concl-text">
+                  <h4>자원 회전 효율의 공정 배분</h4>
+                  <p>백그라운드 스케줄러가 노쇼 건을 스스로 모니터링하여 강제 회수하고 사용 한도를 통제하여, 대기 중이던 사용자들에게 실시간으로 공평한 기회를 보장합니다.</p>
+                </div>
+              </div>
+              <div class="concl-item">
+                <div class="concl-icon">✔</div>
+                <div class="concl-text">
+                  <h4>물리 피드백을 통한 사용 의식 고취</h4>
+                  <p>시야를 끄는 LED 신호등과 청각적인 부저 상승/하강음 멜로디 피드백이 조화롭게 작용하여 반납 시간을 정확히 인지하고 규칙을 준수하는 문화를 형성합니다.</p>
+                </div>
               </div>
             </div>
-            <div class="concl-item">
-              <div class="concl-icon">✔</div>
-              <div class="concl-text">
-                <h4>공용 인프라 관리의 소형화</h4>
-                <p>회의실 같은 커다란 공간에 국한되었던 예약 시스템을 학과 공용 PC, 공유기, 소형 실습 키트 등 미세한 공용 물품 영역까지 손쉽게 확장하여 관리합니다.</p>
-              </div>
-            </div>
-            <div class="concl-item">
-              <div class="concl-icon">✔</div>
-              <div class="concl-text">
-                <h4>자원 회전 효율의 공정 배분</h4>
-                <p>백그라운드 스케줄러가 노쇼 건을 스스로 모니터링하여 강제 회수하고 사용 한도를 통제하여, 대기 중이던 사용자들에게 실시간으로 공평한 기회를 보장합니다.</p>
-              </div>
-            </div>
-            <div class="concl-item">
-              <div class="concl-icon">✔</div>
-              <div class="concl-text">
-                <h4>물리 피드백을 통한 사용 의식 고취</h4>
-                <p>시야를 끄는 LED 신호등과 청각적인 부저 상승/하강음 멜로디 피드백이 조화롭게 작용하여 반납 시간을 정확히 인지하고 규칙을 준수하는 문화를 형성합니다.</p>
-              </div>
-            </div>
+          </div>
+          <!-- AI 일러스트 영역 -->
+          <div class="illustration-box">
+            <img src="../images/conclusion_illustration.png" alt="결론 일러스트">
           </div>
         </div>
       </div>
