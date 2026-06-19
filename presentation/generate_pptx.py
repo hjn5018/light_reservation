@@ -3,7 +3,7 @@ import sys
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
-from pptx.enum.text import PP_ALIGN
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.enum.shapes import MSO_SHAPE
 
 def create_presentation(filename="presentation.pptx"):
@@ -14,13 +14,14 @@ def create_presentation(filename="presentation.pptx"):
     prs.slide_height = Inches(7.5)
     
     # Color Palette (Dark Theme)
-    BG_COLOR = RGBColor(15, 23, 42)        # #0F172A Slate 900 (Very Dark slate)
-    PANEL_COLOR = RGBColor(30, 41, 59)     # #1E293B Slate 800 (Card backgrounds)
-    TEXT_WHITE = RGBColor(248, 250, 252)   # #F8FAFC White/Gray
-    TEXT_MUTED = RGBColor(148, 163, 184)   # #94A3B8 Cool Gray for captions
-    COLOR_EMERALD = RGBColor(16, 185, 129) # #10B981 Emerald 500 (Primary accent)
-    COLOR_AMBER = RGBColor(245, 158, 11)   # #F59E0B Amber 500 (Secondary accent)
-    COLOR_RED = RGBColor(239, 68, 68)      # #EF4444 Red 500 (Alert/Warning)
+    BG_COLOR = RGBColor(15, 23, 42)        # #0F172A Slate 900
+    PANEL_COLOR = RGBColor(30, 41, 59)     # #1E293B Slate 800
+    TEXT_WHITE = RGBColor(248, 250, 252)   # #F8FAFC
+    TEXT_MUTED = RGBColor(148, 163, 184)   # #94A3B8 Cool Gray
+    COLOR_EMERALD = RGBColor(16, 185, 129) # #10B981 Emerald 500
+    COLOR_AMBER = RGBColor(245, 158, 11)   # #F59E0B Amber 500
+    COLOR_BLUE = RGBColor(59, 130, 246)    # #3B82F6 Blue 500
+    COLOR_RED = RGBColor(239, 68, 68)      # #EF4444 Red 500
     
     FONT_TITLE = "Malgun Gothic"
     FONT_BODY = "Malgun Gothic"
@@ -52,7 +53,7 @@ def create_presentation(filename="presentation.pptx"):
         p_title = tf_title.paragraphs[0]
         p_title.text = title_text
         p_title.font.name = FONT_TITLE
-        p_title.font.size = Pt(26)
+        p_title.font.size = Pt(24)
         p_title.font.color.rgb = TEXT_WHITE
         p_title.font.bold = True
         
@@ -65,6 +66,38 @@ def create_presentation(filename="presentation.pptx"):
         p_foot.font.name = FONT_BODY
         p_foot.font.size = Pt(9)
         p_foot.font.color.rgb = TEXT_MUTED
+
+    # Helpers to safely add images
+    def try_add_image(slide, path, left, top, width, height):
+        # Resolve path relative to this script's directory
+        resolved_path = path
+        if not os.path.isabs(path):
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            # Path might be "../images/..." or "images/..."
+            # Strip leading ../ or similar
+            clean_path = path.lstrip("./").replace("../", "")
+            resolved_path = os.path.join(os.path.dirname(base_dir), clean_path)
+            
+        if os.path.exists(resolved_path):
+            try:
+                slide.shapes.add_picture(resolved_path, left, top, width, height)
+                return True
+            except Exception as e:
+                print(f"Error adding image {resolved_path}: {e}")
+        else:
+            print(f"Warning: Image not found at {resolved_path}")
+            # Draw a placeholder box
+            ph = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
+            ph.fill.solid()
+            ph.fill.fore_color.rgb = PANEL_COLOR
+            ph.line.color.rgb = TEXT_MUTED
+            tf = ph.text_frame
+            p = tf.paragraphs[0]
+            p.text = f"Image Placeholder:\n{os.path.basename(path)}"
+            p.alignment = PP_ALIGN.CENTER
+            p.font.size = Pt(10)
+            p.font.color.rgb = TEXT_WHITE
+        return False
 
     slide_layout = prs.slide_layouts[6]  # Blank Layout
 
@@ -117,13 +150,12 @@ def create_presentation(filename="presentation.pptx"):
     p_sub2.space_before = Pt(20)
 
     # ----------------------------------------------------
-    # SLIDE 2: Table of Contents (목차) - [NEW]
+    # SLIDE 2: Table of Contents (목차)
     # ----------------------------------------------------
     slide2 = prs.slides.add_slide(slide_layout)
     set_slide_background(slide2)
     add_slide_header(slide2, "발표 목차 (Contents)")
     
-    # 5 sections in 5 rounded panels
     start_top = Inches(1.6)
     panel_h = Inches(0.85)
     gap = Inches(0.2)
@@ -182,7 +214,7 @@ def create_presentation(filename="presentation.pptx"):
     set_slide_background(slide3)
     add_slide_header(slide3, "1. 개발 배경 및 필요성")
     
-    callout = slide3.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.5), Inches(11.733), Inches(0.7))
+    callout = slide3.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.5), Inches(6.8), Inches(0.7))
     callout.fill.solid()
     callout.fill.fore_color.rgb = PANEL_COLOR
     callout.line.color.rgb = COLOR_AMBER
@@ -192,22 +224,22 @@ def create_presentation(filename="presentation.pptx"):
     p_call = tf_call.paragraphs[0]
     p_call.text = "💡 공용 자원 관리의 고질적인 무단 점유와 예약 방치(No-Show)를 시스템 제어로 해결"
     p_call.font.name = FONT_TITLE
-    p_call.font.size = Pt(14)
+    p_call.font.size = Pt(11.5)
     p_call.font.color.rgb = TEXT_WHITE
     p_call.font.bold = True
     
-    # 2 columns
-    col_w = Inches(5.6)
-    left_c = slide3.shapes.add_textbox(Inches(0.8), Inches(2.4), col_w, Inches(4.2))
+    # 2 columns structure
+    left_c = slide3.shapes.add_textbox(Inches(0.8), Inches(2.3), Inches(6.8), Inches(4.5))
     tf_l = left_c.text_frame
     tf_l.word_wrap = True
+    
     p_lh = tf_l.paragraphs[0]
     p_lh.text = "🚨 기존 공용 자원의 관리 한계"
     p_lh.font.name = FONT_TITLE
-    p_lh.font.size = Pt(18)
+    p_lh.font.size = Pt(15)
     p_lh.font.color.rgb = COLOR_AMBER
     p_lh.font.bold = True
-    p_lh.space_after = Pt(12)
+    p_lh.space_after = Pt(8)
     
     probs = [
         "비인가 무단 점유: 실시간 예약 및 점유 상태가 불투명하여 발생하는 자원 가로채기와 마찰",
@@ -218,20 +250,18 @@ def create_presentation(filename="presentation.pptx"):
         p = tf_l.add_paragraph()
         p.text = "• " + text
         p.font.name = FONT_BODY
-        p.font.size = Pt(13)
+        p.font.size = Pt(11)
         p.font.color.rgb = TEXT_WHITE
-        p.space_after = Pt(10)
+        p.space_after = Pt(6)
         
-    right_c = slide3.shapes.add_textbox(Inches(6.9), Inches(2.4), col_w, Inches(4.2))
-    tf_r = right_c.text_frame
-    tf_r.word_wrap = True
-    p_rh = tf_r.paragraphs[0]
+    p_rh = tf_l.add_paragraph()
     p_rh.text = "✅ 스마트 예약 시스템의 해결 대안"
     p_rh.font.name = FONT_TITLE
-    p_rh.font.size = Pt(18)
+    p_rh.font.size = Pt(15)
     p_rh.font.color.rgb = COLOR_EMERALD
     p_rh.font.bold = True
-    p_rh.space_after = Pt(12)
+    p_rh.space_before = Pt(14)
+    p_rh.space_after = Pt(8)
     
     sols = [
         "웹 실시간 대시보드: 5초 주기로 모든 공용 물품/공간의 예약 상태를 한눈에 비동기 모니터링",
@@ -239,46 +269,52 @@ def create_presentation(filename="presentation.pptx"):
         "자동 만료 스케줄러: 지정 대기 시간 내 미사용 시 노쇼 취소 처리, 최대 사용시간 경과 시 자동 반납"
     ]
     for text in sols:
-        p = tf_r.add_paragraph()
+        p = tf_l.add_paragraph()
         p.text = "• " + text
         p.font.name = FONT_BODY
-        p.font.size = Pt(13)
+        p.font.size = Pt(11)
         p.font.color.rgb = TEXT_WHITE
-        p.space_after = Pt(10)
+        p.space_after = Pt(6)
+        
+    # AI Illustration on the Right
+    try_add_image(slide3, "../images/background_need_illustration.png", Inches(8.0), Inches(1.5), Inches(4.5), Inches(4.5))
 
     # ----------------------------------------------------
-    # SLIDE 4: Equipment Used (사용 장비 및 부품) - [NEW]
+    # SLIDE 4: Equipment Used (사용 장비 및 부품)
     # ----------------------------------------------------
     slide4 = prs.slides.add_slide(slide_layout)
     set_slide_background(slide4)
     add_slide_header(slide4, "2. 사용 장비 및 부품 사양")
     
-    # 4 column blocks (Grid layout)
     grid_w = Inches(2.7)
     grid_h = Inches(4.5)
     grid_top = Inches(1.8)
     grid_gap = Inches(0.3)
     
     equipments = [
-        ("🖥️", "라즈베리 파이 4 (2대)", "시스템 연동 제어 코어", 
+        ("라즈베리 파이 4 (2대)", "시스템 연동 제어 코어", 
          ["Pi A: Apache 웹 서버 호스팅 및 웹-서버 CGI 소켓 게이트웨이 역할", 
-          "Pi B: Flask REST API 처리, 백그라운드 소켓 수신 및 하드웨어 액추에이터 제어"]),
-        ("🚨", "삼색 LED (3개)", "직관적인 시각 피드백", 
+          "Pi B: Flask REST API 처리, 백그라운드 소켓 수신 및 하드웨어 액추에이터 제어"],
+         "../images/pi_A_pi_B_view.jpg"),
+        ("삼색 LED (3개)", "직관적인 시각 피드백", 
          ["자원의 상태 변화를 신호등 개념으로 가시화", 
           "초록 LED: 대기 상태(Available)", 
           "노란 LED: 예약 상태(Reserved)", 
-          "빨간 LED: 사용 상태(In Use)"]),
-        ("📟", "16x2 Character LCD", "포커스 자원 문자 출력", 
+          "빨간 LED: 사용 상태(In Use)"],
+         "../images/breadboard_view.jpg"),
+        ("16x2 Character LCD", "포커스 자원 문자 출력", 
          ["선택된 기기의 영문 자원명 실시간 렌더링", 
           "기기의 현재 세부 동작 상태 문자 표현", 
-          "가변저항(Potentiometer) 회로 연동을 통해 전압 대비(Contrast) 미세 튜닝"]),
-        ("🔊", "피에조 패시브 부저", "상태 전이 청각 피드백", 
+          "가변저항 회로 연동을 통해 전압 대비 미세 튜닝"],
+         "../images/pi_B_view.jpg"),
+        ("피에조 패시브 부저", "상태 전이 청각 피드백", 
          ["주파수 PWM 변조를 활용한 상태 변경 음계 연주", 
           "사용 시작 시: 상승음 (도-미-솔) 멜로디 알림", 
-          "자동 만료/반납 시: 하강음 (솔-미-도) 멜로디 경보"])
+          "자동 만료/반납 시: 하강음 (솔-미-도) 멜로디 경보"],
+         "../images/breadboard_view.jpg")
     ]
     
-    for idx, (icon, name, caption, specs) in enumerate(equipments):
+    for idx, (name, caption, specs, img_path) in enumerate(equipments):
         left_pos = Inches(0.8) + idx * (grid_w + grid_gap)
         
         # Grid box
@@ -288,312 +324,364 @@ def create_presentation(filename="presentation.pptx"):
         box.line.color.rgb = COLOR_EMERALD if idx%2==0 else COLOR_AMBER
         box.line.width = Pt(1.5)
         
-        tf_box = box.text_frame
-        tf_box.word_wrap = True
-        tf_box.margin_left = Inches(0.2)
-        tf_box.margin_right = Inches(0.2)
-        tf_box.margin_top = Inches(0.2)
+        # Add Image inside card
+        img_h = Inches(1.3)
+        try_add_image(slide4, img_path, left_pos + Inches(0.15), grid_top + Inches(0.15), grid_w - Inches(0.3), img_h)
         
-        # Icon
-        p_icon = tf_box.paragraphs[0]
-        p_icon.text = icon
-        p_icon.alignment = PP_ALIGN.CENTER
-        p_icon.font.size = Pt(28)
-        p_icon.space_after = Pt(6)
+        # Text box below image
+        tb = slide4.shapes.add_textbox(left_pos + Inches(0.1), grid_top + img_h + Inches(0.2), grid_w - Inches(0.2), grid_h - img_h - Inches(0.3))
+        tf_box = tb.text_frame
+        tf_box.word_wrap = True
+        tf_box.margin_left = tf_box.margin_right = tf_box.margin_top = tf_box.margin_bottom = 0
         
         # Name
-        p_name = tf_box.add_paragraph()
+        p_name = tf_box.paragraphs[0]
         p_name.text = name
         p_name.alignment = PP_ALIGN.CENTER
         p_name.font.name = FONT_TITLE
-        p_name.font.size = Pt(14)
+        p_name.font.size = Pt(12)
         p_name.font.bold = True
         p_name.font.color.rgb = TEXT_WHITE
+        p_name.space_after = Pt(2)
         
         # Caption
         p_cap = tf_box.add_paragraph()
         p_cap.text = caption
         p_cap.alignment = PP_ALIGN.CENTER
         p_cap.font.name = FONT_BODY
-        p_cap.font.size = Pt(11)
+        p_cap.font.size = Pt(9.5)
         p_cap.font.color.rgb = COLOR_AMBER if idx%2==1 else COLOR_EMERALD
-        p_cap.space_after = Pt(12)
+        p_cap.space_after = Pt(8)
         
         # Bullet Specs
         for spec in specs:
             p_spec = tf_box.add_paragraph()
-            p_spec.text = "- " + spec
+            p_spec.text = "• " + spec
             p_spec.font.name = FONT_BODY
-            p_spec.font.size = Pt(9.5)
+            p_spec.font.size = Pt(8.5)
             p_spec.font.color.rgb = TEXT_WHITE
-            p_spec.space_after = Pt(4)
+            p_spec.space_after = Pt(3)
 
     # ----------------------------------------------------
-    # SLIDE 5: Development Schedule (개발 일정) - [NEW]
+    # SLIDE 5: Development Schedule (Gantt Chart)
     # ----------------------------------------------------
     slide5 = prs.slides.add_slide(slide_layout)
     set_slide_background(slide5)
-    add_slide_header(slide5, "3. 개발 일정 및 수행 내역")
+    add_slide_header(slide5, "3. 개발 일정 및 수행 내역 (Gantt Chart)")
     
-    # Timeline Layout (3 Columns side-by-side representing 3 weeks)
-    col_w = Inches(3.6)
-    col_h = Inches(4.3)
-    col_top = Inches(2.0)
-    col_gap = Inches(0.4)
+    # Custom Gantt Chart representation
+    # Table headers
+    hdr_box = slide5.shapes.add_textbox(Inches(0.8), Inches(1.5), Inches(11.733), Inches(0.4))
+    tf_hdr = hdr_box.text_frame
+    tf_hdr.margin_left = tf_hdr.margin_right = tf_hdr.margin_top = tf_hdr.margin_bottom = 0
+    p_hdr = tf_hdr.paragraphs[0]
     
-    schedule_steps = [
-        ("📅 1주차: 기획 & 설계", "2026.06.04 ~ 2026.06.10", COLOR_EMERALD,
-         ["• 요구사항 분석 및 관리 자원(공간/기기)의 명세 구체화",
-          "• Pi A 및 Pi B 간의 이원화 네트워크 통신 방식 아키텍처 수립",
-          "• 라즈베리 파이 GPIO 회로도 설계 (LED, LCD, 부저 핀 맵 매핑)"]),
-        ("📅 2주차: 구현 & 프로그래밍", "2026.06.11 ~ 2026.06.17", COLOR_AMBER,
-         ["• Pi A Apache 호스팅 환경 구축 및 CGI 게이트웨이 파이썬 구현",
-          "• Pi B Flask REST API 엔드포인트 및 다중 스레드 소켓 서버 코어 개발",
-          "• GPIO 드라이버 모듈(LCD, LED, 패시브 부저 PWM) 작성 및 더미 모드 연동"]),
-        ("📅 3주차: 검증 & 최적화", "2026.06.18 ~ 2026.06.25", COLOR_EMERALD,
-         ["• 전체 네트워크 연동 및 예외 시나리오 통합 테스트(PIN 검증, 마스터 PIN)",
-          "• 백그라운드 만료 스케줄러 스레드의 타이머 연산 디버깅 및 안전 잠금 확인",
-          "• setup.sh 설치 자동화 쉘 스크립트 작성 및 시스템 서비스 데몬 등록 검수"])
+    # Grid math
+    gantt_left = Inches(4.2)
+    gantt_width = Inches(8.333)
+    w_width = gantt_width / 3.0  # 2.777 inches per week
+    
+    # Draw headers for weeks
+    weeks = [
+        ("1주차 (06.04 ~ 06.10)", gantt_left),
+        ("2주차 (06.11 ~ 06.17)", gantt_left + w_width),
+        ("3주차 (06.18 ~ 06.25)", gantt_left + w_width * 2)
+    ]
+    for w_name, w_pos in weeks:
+        wb = slide5.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, w_pos + Inches(0.05), Inches(1.5), w_width - Inches(0.1), Inches(0.4))
+        wb.fill.solid()
+        wb.fill.fore_color.rgb = PANEL_COLOR
+        wb.line.color.rgb = COLOR_EMERALD
+        tf_wb = wb.text_frame
+        p_wb = tf_wb.paragraphs[0]
+        p_wb.text = w_name
+        p_wb.font.size = Pt(10)
+        p_wb.font.bold = True
+        p_wb.font.color.rgb = TEXT_WHITE
+        p_wb.alignment = PP_ALIGN.CENTER
+        
+    # Gantt rows
+    tasks = [
+        ("📋 요구사항 정의 및 기획", 1, COLOR_EMERALD, "자원 기획 및 명세 정의"),
+        ("⚡ 회로 설계 및 부품 구성", 1, COLOR_EMERALD, "GPIO 회로 배선도 수립"),
+        ("📟 Web & CGI 서버 개발 (Pi A)", 2, COLOR_AMBER, "Apache 웹 리소스 & CGI 개발"),
+        ("⚙️ Flask & Socket 개발 (Pi B)", 2, COLOR_AMBER, "REST API 및 소켓 리스너 개발"),
+        ("🚨 하드웨어 제어 모듈 코딩", 2, COLOR_AMBER, "LED/LCD/Buzzer 드라이버 구현"),
+        ("🧪 통합 연동 및 디버깅", 3, COLOR_BLUE, "소켓 통신 데이터 검증"),
+        ("🔒 스케줄러 안정화 및 배포", 3, COLOR_BLUE, "데몬 서비스 등록 & setup.sh 제작")
     ]
     
-    # Progress indicators / arrows
-    for idx, (title, date, accent_color, tasks) in enumerate(schedule_steps):
-        left_pos = Inches(0.8) + idx * (col_w + col_gap)
+    start_top = Inches(2.1)
+    row_height = Inches(0.55)
+    
+    for idx, (t_name, week_idx, color, desc) in enumerate(tasks):
+        top_pos = start_top + idx * row_height
         
-        # Panel
-        card = slide5.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left_pos, col_top, col_w, col_h)
-        card.fill.solid()
-        card.fill.fore_color.rgb = PANEL_COLOR
-        card.line.color.rgb = accent_color
-        card.line.width = Pt(2.0)
+        # Row background panel for task label
+        lbl_box = slide5.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), top_pos, Inches(3.2), Inches(0.45))
+        lbl_box.fill.solid()
+        lbl_box.fill.fore_color.rgb = PANEL_COLOR
+        lbl_box.line.color.rgb = TEXT_MUTED
+        lbl_box.line.width = Pt(1.0)
+        tf_lbl = lbl_box.text_frame
+        p_lbl = tf_lbl.paragraphs[0]
+        p_lbl.text = t_name
+        p_lbl.font.size = Pt(10)
+        p_lbl.font.bold = True
+        p_lbl.font.color.rgb = TEXT_WHITE
+        p_lbl.alignment = PP_ALIGN.LEFT
         
-        tf_card = card.text_frame
-        tf_card.word_wrap = True
-        tf_card.margin_left = tf_card.margin_right = Inches(0.25)
-        tf_card.margin_top = Inches(0.2)
-        
-        p_title = tf_card.paragraphs[0]
-        p_title.text = title
-        p_title.font.name = FONT_TITLE
-        p_title.font.size = Pt(16)
-        p_title.font.bold = True
-        p_title.font.color.rgb = accent_color
-        p_title.space_after = Pt(4)
-        
-        p_date = tf_card.add_paragraph()
-        p_date.text = date
-        p_date.font.name = FONT_BODY
-        p_date.font.size = Pt(12)
-        p_date.font.color.rgb = TEXT_MUTED
-        p_date.space_after = Pt(18)
-        
-        for task in tasks:
-            p_task = tf_card.add_paragraph()
-            p_task.text = task
-            p_task.font.name = FONT_BODY
-            p_task.font.size = Pt(11.5)
-            p_task.font.color.rgb = TEXT_WHITE
-            p_task.space_after = Pt(10)
-            
-        # Draw small arrow between columns (except last)
-        if idx < 2:
-            arrow = slide5.shapes.add_shape(
-                MSO_SHAPE.RIGHT_ARROW, 
-                Inches(0.8) + col_w + idx * (col_w + col_gap) + Inches(0.1), 
-                col_top + col_h/2 - Inches(0.2), 
-                Inches(0.2), 
-                Inches(0.4)
-            )
-            arrow.fill.solid()
-            arrow.fill.fore_color.rgb = COLOR_AMBER
-            arrow.line.fill.background()
+        # Gantt Bar
+        bar_left = gantt_left + (week_idx - 1) * w_width
+        bar_box = slide5.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, bar_left + Inches(0.05), top_pos, w_width - Inches(0.1), Inches(0.45))
+        bar_box.fill.solid()
+        bar_box.fill.fore_color.rgb = color
+        bar_box.line.fill.background()
+        tf_bar = bar_box.text_frame
+        p_bar = tf_bar.paragraphs[0]
+        p_bar.text = desc
+        p_bar.font.size = Pt(9.5)
+        p_bar.font.bold = True
+        p_bar.font.color.rgb = BG_COLOR
+        p_bar.alignment = PP_ALIGN.CENTER
 
     # ----------------------------------------------------
-    # SLIDE 6: Overall System Structure (전체 시스템 구성) - [NEW]
+    # SLIDE 6: Overall System Structure (UML Component Diagram)
     # ----------------------------------------------------
     slide6 = prs.slides.add_slide(slide_layout)
     set_slide_background(slide6)
-    add_slide_header(slide6, "4. 전체 시스템 구성도")
+    add_slide_header(slide6, "4. 전체 시스템 구성도 (UML Component Diagram)")
     
-    # 3 Column architecture layout (Similar to Slide 3 of previous version)
-    col_width = Inches(3.6)
-    col_height = Inches(4.5)
-    top_pos = Inches(1.8)
-    
-    # Pi A Block
-    pi_a_panel = slide6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), top_pos, col_width, col_height)
-    pi_a_panel.fill.solid()
-    pi_a_panel.fill.fore_color.rgb = PANEL_COLOR
-    pi_a_panel.line.color.rgb = COLOR_EMERALD
-    pi_a_panel.line.width = Pt(1.5)
-    tf_a = pi_a_panel.text_frame
+    # Left component: Pi A
+    pi_a = slide6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.8), Inches(3.8), Inches(4.3))
+    pi_a.fill.solid()
+    pi_a.fill.fore_color.rgb = PANEL_COLOR
+    pi_a.line.color.rgb = COLOR_EMERALD
+    pi_a.line.width = Pt(2.0)
+    tf_a = pi_a.text_frame
     tf_a.word_wrap = True
-    tf_a.margin_left = tf_a.margin_right = Inches(0.2)
-    tf_a.margin_top = Inches(0.25)
+    p_a = tf_a.paragraphs[0]
+    p_a.text = "«component»\nPi A (Web Gateway)"
+    p_a.alignment = PP_ALIGN.CENTER
+    p_a.font.name = FONT_TITLE
+    p_a.font.size = Pt(14)
+    p_a.font.bold = True
+    p_a.font.color.rgb = COLOR_EMERALD
     
-    p = tf_a.paragraphs[0]
-    p.text = "📟 Pi A : 웹 게이트웨이"
-    p.font.name = FONT_TITLE
-    p.font.size = Pt(18)
-    p.font.color.rgb = COLOR_EMERALD
-    p.font.bold = True
-    p.space_after = Pt(14)
-    
-    items_a = [
-        "Apache Web Server: 포트 80 호스팅, 정적 웹 리소스 제공 (HTML, JS)",
-        "ExecCGI 모듈: 비동기 데이터 통신을 위한 Python CGI 핸들러 연동",
-        "CGI Script (update_status.py): 웹 브라우저의 제어 패킷을 해석하고 Pi B로 TCP 소켓 릴레이 송신"
+    # Pi A Sub-components
+    a_subs = [
+        "«component» Dashboard UI\n(index.html & app.js)",
+        "«component» CGI Client\n(update_status.py)"
     ]
-    for item in items_a:
-        p = tf_a.add_paragraph()
-        p.text = "- " + item
-        p.font.name = FONT_BODY
-        p.font.size = Pt(11.5)
-        p.font.color.rgb = TEXT_WHITE
-        p.space_after = Pt(10)
-
-    # Communications Block
-    net_panel = slide6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(4.8), top_pos, col_width, col_height)
-    net_panel.fill.solid()
-    net_panel.fill.fore_color.rgb = PANEL_COLOR
-    net_panel.line.color.rgb = COLOR_AMBER
-    net_panel.line.width = Pt(1.5)
-    tf_net = net_panel.text_frame
-    tf_net.word_wrap = True
-    tf_net.margin_left = tf_net.margin_right = Inches(0.2)
-    tf_net.margin_top = Inches(0.25)
-    
-    p = tf_net.paragraphs[0]
-    p.text = "🔌 이원화 통신 파이프라인"
-    p.font.name = FONT_TITLE
-    p.font.size = Pt(18)
-    p.font.color.rgb = COLOR_AMBER
-    p.font.bold = True
-    p.space_after = Pt(14)
-    
-    items_net = [
-        "제어 명령 (저지연): 사용자 상태 전환 시 Pi A CGI 스크립트와 Pi B 소켓 리스너 스레드 간의 1:1 TCP Raw Socket 통신 (포트 50007)",
-        "상태 조회 (REST API): 웹 대시보드에서 예약 현황 및 잔여 시간 동기화를 위해 5초 단위로 Pi B Flask API를 비동기 호출 (포트 5000)"
-    ]
-    for item in items_net:
-        p = tf_net.add_paragraph()
-        p.text = "- " + item
-        p.font.name = FONT_BODY
-        p.font.size = Pt(11.5)
-        p.font.color.rgb = TEXT_WHITE
-        p.space_after = Pt(10)
-
-    # Pi B Block
-    pi_b_panel = slide6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(8.8), top_pos, col_width, col_height)
-    pi_b_panel.fill.solid()
-    pi_b_panel.fill.fore_color.rgb = PANEL_COLOR
-    pi_b_panel.line.color.rgb = COLOR_EMERALD
-    pi_b_panel.line.width = Pt(1.5)
-    tf_b = pi_b_panel.text_frame
+    for s_idx, text in enumerate(a_subs):
+        sb = slide6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.1), Inches(2.8) + s_idx * Inches(1.2), Inches(3.2), Inches(0.9))
+        sb.fill.solid()
+        sb.fill.fore_color.rgb = BG_COLOR
+        sb.line.color.rgb = TEXT_MUTED
+        sb.line.width = Pt(1.0)
+        tf_sb = sb.text_frame
+        p_sb = tf_sb.paragraphs[0]
+        p_sb.text = text
+        p_sb.font.size = Pt(9.5)
+        p_sb.font.color.rgb = TEXT_WHITE
+        p_sb.alignment = PP_ALIGN.CENTER
+        
+    # Right component: Pi B
+    pi_b = slide6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(8.7), Inches(1.8), Inches(3.8), Inches(4.3))
+    pi_b.fill.solid()
+    pi_b.fill.fore_color.rgb = PANEL_COLOR
+    pi_b.line.color.rgb = COLOR_AMBER
+    pi_b.line.width = Pt(2.0)
+    tf_b = pi_b.text_frame
     tf_b.word_wrap = True
-    tf_b.margin_left = tf_b.margin_right = Inches(0.2)
-    tf_b.margin_top = Inches(0.25)
+    p_b = tf_b.paragraphs[0]
+    p_b.text = "«component»\nPi B (Hardware Core)"
+    p_b.alignment = PP_ALIGN.CENTER
+    p_b.font.name = FONT_TITLE
+    p_b.font.size = Pt(14)
+    p_b.font.bold = True
+    p_b.font.color.rgb = COLOR_AMBER
     
-    p = tf_b.paragraphs[0]
-    p.text = "⚙️ Pi B : 하드웨어 코어"
-    p.font.name = FONT_TITLE
-    p.font.size = Pt(18)
-    p.font.color.rgb = COLOR_EMERALD
-    p.font.bold = True
-    p.space_after = Pt(14)
-    
-    items_b = [
-        "Flask API Server: 전역 예약 상태 조회 및 실시간 잔여시간 계산 제공",
-        "Socket Listener: 백그라운드 소켓 스레드가 상시 대기하여 Pi A CGI 제어 패킷 수신",
-        "액추에이터 제어 모듈: LED 갱신(led.py), 부저 PWM 변조(buzzer.py), 한글 매핑 LCD 제어(lcd.py) 구동",
-        "JSON DB: data.json 로컬 영속 저장 및 정전 시 직전 상태 백업 복구"
+    # Pi B Sub-components
+    b_subs = [
+        "«component» Flask REST API",
+        "«component» Socket Listener (Thread)",
+        "«component» Mutex Lock (state_lock) & data.json"
     ]
-    for item in items_b:
-        p = tf_b.add_paragraph()
-        p.text = "- " + item
-        p.font.name = FONT_BODY
-        p.font.size = Pt(11.5)
-        p.font.color.rgb = TEXT_WHITE
-        p.space_after = Pt(10)
+    for s_idx, text in enumerate(b_subs):
+        sb = slide6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(9.0), Inches(2.6) + s_idx * Inches(0.85), Inches(3.2), Inches(0.65))
+        sb.fill.solid()
+        sb.fill.fore_color.rgb = BG_COLOR
+        sb.line.color.rgb = TEXT_MUTED
+        sb.line.width = Pt(1.0)
+        tf_sb = sb.text_frame
+        p_sb = tf_sb.paragraphs[0]
+        p_sb.text = text
+        p_sb.font.size = Pt(9.0)
+        p_sb.font.color.rgb = TEXT_WHITE
+        p_sb.alignment = PP_ALIGN.CENTER
+        
+    # Pi B Port section
+    pb_port = slide6.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(9.0), Inches(5.2), Inches(3.2), Inches(0.5))
+    pb_port.fill.solid()
+    pb_port.fill.fore_color.rgb = BG_COLOR
+    pb_port.line.color.rgb = COLOR_AMBER
+    pb_port.line.width = Pt(1.0)
+    tf_port = pb_port.text_frame
+    p_port = tf_port.paragraphs[0]
+    p_port.text = "«port» GPIO ➔ LEDs/LCD/Buzzer"
+    p_port.font.size = Pt(9.0)
+    p_port.font.bold = True
+    p_port.font.color.rgb = COLOR_AMBER
+    p_port.alignment = PP_ALIGN.CENTER
+    
+    # Middle arrows/labels
+    # TCP command
+    tcp_arrow = slide6.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, Inches(4.8), Inches(3.0), Inches(3.7), Inches(0.3))
+    tcp_arrow.fill.solid()
+    tcp_arrow.fill.fore_color.rgb = COLOR_EMERALD
+    tcp_arrow.line.fill.background()
+    
+    tcp_txt = slide6.shapes.add_textbox(Inches(4.8), Inches(2.5), Inches(3.7), Inches(0.4))
+    tf_tcp = tcp_txt.text_frame
+    p_tcp = tf_tcp.paragraphs[0]
+    p_tcp.text = "«interface» TCP:50007 (Command)"
+    p_tcp.font.size = Pt(10)
+    p_tcp.font.bold = True
+    p_tcp.font.color.rgb = TEXT_WHITE
+    p_tcp.alignment = PP_ALIGN.CENTER
+    
+    # HTTP polling
+    http_arrow = slide6.shapes.add_shape(MSO_SHAPE.LEFT_ARROW, Inches(4.8), Inches(4.5), Inches(3.7), Inches(0.3))
+    http_arrow.fill.solid()
+    http_arrow.fill.fore_color.rgb = COLOR_AMBER
+    http_arrow.line.fill.background()
+    
+    http_txt = slide6.shapes.add_textbox(Inches(4.8), Inches(4.0), Inches(3.7), Inches(0.4))
+    tf_http = http_txt.text_frame
+    p_http = tf_http.paragraphs[0]
+    p_http.text = "«interface» HTTP:5000 (Polling)"
+    p_http.font.size = Pt(10)
+    p_http.font.bold = True
+    p_http.font.color.rgb = TEXT_WHITE
+    p_http.alignment = PP_ALIGN.CENTER
 
     # ----------------------------------------------------
-    # SLIDE 7: Overall System Flowchart (전체 시스템 흐름도) - [NEW]
+    # SLIDE 7: Overall System Flowchart (UML Sequence Diagram)
     # ----------------------------------------------------
     slide7 = prs.slides.add_slide(slide_layout)
     set_slide_background(slide7)
-    add_slide_header(slide7, "5. 전체 시스템 연동 흐름도")
+    add_slide_header(slide7, "5. 전체 시스템 연동 흐름도 (UML Sequence Diagram)")
     
-    # Visual sequential flow description
-    flow_steps = [
-        ("1. 예약 / 제어 요청", "사용자가 웹 대시보드(index.html)에서 특정 기기 예약 버튼 클릭 후 본인 확인을 위한 4자리 비밀번호(PIN) 입력"),
-        ("2. CGI 및 TCP 소켓 송신", "브라우저 요청을 접수한 Pi A의 Apache CGI(update_status.py)가 저지연 TCP 소켓 연결을 맺고 제어 패킷을 Pi B로 전송"),
-        ("3. 소켓 수신 및 뮤텍스 락", "Pi B 백그라운드 소켓 리스너 스레드가 이를 수신하고, Flask API 조회와의 충돌을 막기 위해 Mutex Lock을 획득 후 data.json 갱신"),
-        ("4. 하드웨어 물리 피드백", "상태 전이에 상응하는 물리 액추에이터 제어 수행 (LED 색상 변경, 피에조 부저 멜로디 출력, Character LCD 텍스트 갱신)"),
-        ("5. 백그라운드 스케줄러", "Pi B의 데몬 스레드가 1초 주기로 돌며 노쇼 시간 만료(1분) 및 사용 한도(3분) 초과를 체크하고, 초과 시 즉각 대기(Idle) 상태로 강제 전환"),
-        ("6. 실시간 브라우저 동기화", "사용자 브라우저가 Flask API(/api/status)를 5초마다 주기적으로 비동기 폴링하여, 갱신된 전역 예약 상태와 카운트다운 초 단위를 화면에 갱신")
+    # X coordinates of 4 lifelines
+    # Col 1 (User): 2.26, Col 2 (Pi A): 5.20, Col 3 (Pi B): 8.13, Col 4 (Hardware): 11.06
+    cols_x = [Inches(2.26), Inches(5.20), Inches(8.13), Inches(11.06)]
+    names = [
+        "🧑‍💻 User\n(Dashboard)",
+        "📟 Pi A\n(Gateway)",
+        "⚙️ Pi B\n(Core Server)",
+        "🚨 Hardware\n(Actuators)"
     ]
     
-    s_top = Inches(1.5)
-    f_height = Inches(0.8)
-    f_gap = Inches(0.1)
+    # Draw lifeline headers
+    for idx, x_pos in enumerate(cols_x):
+        h_box = slide7.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_pos - Inches(0.9), Inches(1.5), Inches(1.8), Inches(0.6))
+        h_box.fill.solid()
+        h_box.fill.fore_color.rgb = PANEL_COLOR
+        h_box.line.color.rgb = COLOR_EMERALD if idx%2==0 else COLOR_AMBER
+        h_box.line.width = Pt(1.5)
+        tf_h = h_box.text_frame
+        p_h = tf_h.paragraphs[0]
+        p_h.text = names[idx]
+        p_h.font.size = Pt(10)
+        p_h.font.bold = True
+        p_h.font.color.rgb = TEXT_WHITE
+        p_h.alignment = PP_ALIGN.CENTER
+        
+        # Vertical lifeline line
+        line = slide7.shapes.add_shape(MSO_SHAPE.RECTANGLE, x_pos - Inches(0.015), Inches(2.1), Inches(0.03), Inches(4.3))
+        line.fill.solid()
+        line.fill.fore_color.rgb = RGBColor(80, 80, 80)
+        line.line.fill.background()
+        
+    # Message definitions
+    # (From Col, To Col, Text, Style [Solid/Dashed], Offset Top)
+    messages = [
+        (1, 2, "1. 예약/사용 요청 (PIN 입력)", "solid", Inches(2.3)),
+        (2, 3, "2. TCP Socket 전송 (Port 50007)", "solid", Inches(2.8)),
+        (3, 3, "3. Mutex Lock 획득 & DB 갱신", "self", Inches(3.3)),
+        (3, 4, "4. GPIO 제어 신호 출력", "solid", Inches(3.8)),
+        (4, 1, "5. LED 점등, 부저 멜로디 및 LCD 텍스트 피드백", "dashed", Inches(4.3)),
+        (3, 3, "6. 만료 스케줄러 (No-show/시간초과 회수)", "self", Inches(4.8)),
+        (1, 3, "7. HTTP REST API 조회 (5초 주기)", "solid", Inches(5.3)),
+        (3, 1, "8. JSON 전역 상태 & 카운트다운 정보 반환", "dashed", Inches(5.8))
+    ]
     
-    for idx, (title, desc) in enumerate(flow_steps):
-        left_pos = Inches(0.8)
-        top_pos = s_top + idx * (f_height + f_gap)
+    for from_col, to_col, msg_txt, style, m_top in messages:
+        x_from = cols_x[from_col - 1]
+        x_to = cols_x[to_col - 1]
         
-        # Step panel
-        flow_panel = slide7.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left_pos, top_pos, Inches(11.733), f_height)
-        flow_panel.fill.solid()
-        flow_panel.fill.fore_color.rgb = PANEL_COLOR
-        flow_panel.line.color.rgb = COLOR_AMBER if idx%2==1 else COLOR_EMERALD
-        flow_panel.line.width = Pt(1.5)
-        
-        tf_flow = flow_panel.text_frame
-        tf_flow.word_wrap = True
-        tf_flow.margin_left = Inches(0.25)
-        tf_flow.margin_top = Inches(0.12)
-        
-        p = tf_flow.paragraphs[0]
-        # Step Title
-        r_title = p.add_run()
-        r_title.text = f"{title}   |   "
-        r_title.font.name = FONT_TITLE
-        r_title.font.size = Pt(13)
-        r_title.font.bold = True
-        r_title.font.color.rgb = COLOR_AMBER if idx%2==1 else COLOR_EMERALD
-        
-        # Step Description
-        r_desc = p.add_run()
-        r_desc.text = desc
-        r_desc.font.name = FONT_BODY
-        r_desc.font.size = Pt(11)
-        r_desc.font.color.rgb = TEXT_WHITE
+        # Self call
+        if style == "self":
+            # Right loop
+            loop = slide7.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x_from, m_top, Inches(0.4), Inches(0.35))
+            loop.fill.solid()
+            loop.fill.fore_color.rgb = PANEL_COLOR
+            loop.line.color.rgb = COLOR_AMBER
+            loop.line.width = Pt(1.2)
+            
+            # Label
+            lbl = slide7.shapes.add_textbox(x_from + Inches(0.45), m_top - Inches(0.05), Inches(3.0), Inches(0.4))
+            tf_l = lbl.text_frame
+            p_l = tf_l.paragraphs[0]
+            p_l.text = msg_txt
+            p_l.font.size = Pt(8.5)
+            p_l.font.bold = True
+            p_l.font.color.rgb = COLOR_AMBER
+        else:
+            # Line
+            line_l = min(x_from, x_to)
+            line_w = abs(x_from - x_to)
+            
+            arrow_shape = MSO_SHAPE.RIGHT_ARROW if x_to > x_from else MSO_SHAPE.LEFT_ARROW
+            arrow = slide7.shapes.add_shape(arrow_shape, line_l, m_top, line_w, Inches(0.12))
+            arrow.fill.solid()
+            # Dashed uses blue, Solid uses emerald
+            arrow.fill.fore_color.rgb = COLOR_BLUE if style == "dashed" else COLOR_EMERALD
+            arrow.line.fill.background()
+            
+            # Text above line
+            tb = slide7.shapes.add_textbox(line_l, m_top - Inches(0.32), line_w, Inches(0.35))
+            tf_b = tb.text_frame
+            tf_b.word_wrap = True
+            tf_b.margin_left = tf_b.margin_right = tf_b.margin_top = tf_b.margin_bottom = 0
+            p_b = tf_b.paragraphs[0]
+            p_b.text = msg_txt
+            p_b.font.size = Pt(8.5)
+            p_b.font.bold = True
+            p_b.font.color.rgb = TEXT_WHITE
+            p_b.alignment = PP_ALIGN.CENTER
 
     # ----------------------------------------------------
-    # SLIDE 8: Detailed Technology Explanations (CGI, Socket, Thread, Mutex) - [NEW]
+    # SLIDE 8: Detailed Technology Explanations (CGI, Socket, Thread, Mutex)
     # ----------------------------------------------------
     slide8 = prs.slides.add_slide(slide_layout)
     set_slide_background(slide8)
     add_slide_header(slide8, "6. 주요 기술 명세 및 동기화 구현")
     
-    # 4 column technologies
     techs = [
-        ("📡 CGI (Common Gateway Interface)", "웹 서버와 백엔드 통신 매개", 
-         ["• Apache Web Server 포트 80과 외부 브라우저 단말과의 동적 게이트웨이",
-          "• 사용자의 POST/GET 비동기 신호를 파이썬 환경 변수로 매핑 해석",
-          "• 소켓 인스턴스를 동적 생성하여 서버 내부 백엔드로 연결 송신"]),
-        ("🔌 저지연 TCP 소켓 통신", "초고속 1:1 양방향 네트워킹", 
-         ["• 포트 50007번에서 Pi A CGI 클라이언트와 Pi B 소켓 리스너 스레드 연동",
-          "• HTTP 오버헤드가 배제된 원시 TCP 세션 데이터 전송으로 패킷 지연 최소화",
-          "• JSON 기반 상태 제어 명령어 전송"]),
-        ("🧵 멀티스레드 (Daemon Threads)", "백그라운드 다중 업무 병렬 처리", 
-         ["• 소켓 리스너 스레드: 클라이언트의 갑작스러운 접속과 제어 명령 상시 대기",
-          "• 타이머 스케줄러 스레드: 1초 간격 상태 및 만료 시간 연산 백그라운드 구동",
-          "• daemon=True 설정으로 웹 해제 시 동시 정지"]),
-        ("🔒 뮤텍스 락 (Mutex Lock)", "경쟁 상태 차단 및 데이터 보호", 
-         ["• state_lock = threading.Lock()",
-          "• 다수의 스레드(Flask/Socket/Scheduler)가 전역 객체 및 파일 DB에 동시 접근 차단",
-          "• with state_lock: 구문을 사용해 데이터 무결성(Data Integrity) 확보"])
+        ("📡 CGI 연동 기술", "Apache & ExecCGI", 
+         ["• 웹 클라이언트(JS)와 백엔드 서버 간의 데이터 게이트웨이 스크립트 동작",
+          "• 웹 요청 환경변수를 파싱해 서버 소켓 연결로 이어주는 동적 커넥터 역할 수행"]),
+        ("🔌 저지연 TCP 소켓", "포트 50007 제어 릴레이", 
+         ["• HTTP 프로토콜의 헤더 오버헤드를 생략하고 원시 TCP 커넥션을 맺어 제어 지연시간 최소화",
+          "• Pi A CGI에서 Pi B 소켓 리스너로 실시간 JSON 문자열 패킷 즉각 송신"]),
+        ("🧵 멀티스레딩", "Daemon Threads 구현", 
+         ["• 소켓 리스너 스레드와 타이머 스케줄러 스레드가 메인 API(Flask)와 별개로 병렬 실행",
+          "• 데몬 모드로 작동하여 메인 시스템 종료 시 부작용 없이 동시 회수 및 종료"]),
+        ("🔒 뮤텍스 락 (Mutex Lock)", "상호 배제 (Lock)", 
+         ["• threading.Lock() 객체를 생성하여 데이터 및 물리 기기 동시 제어 충돌 차단",
+          "• 소켓 쓰기 동작 중 불완전한 상태 정보를 Flask API가 읽지 못하게 크리티컬 섹션 완벽 보호"])
     ]
     
     grid_w = Inches(2.7)
@@ -644,74 +732,67 @@ def create_presentation(filename="presentation.pptx"):
             p_spec.space_after = Pt(6)
 
     # ----------------------------------------------------
-    # SLIDE 9: Actual Operating Image (실제 작동 이미지 - Placeholder) - [NEW]
+    # SLIDE 9: Actual Operating Image (실제 작동 이미지 그리드)
     # ----------------------------------------------------
     slide9 = prs.slides.add_slide(slide_layout)
     set_slide_background(slide9)
     add_slide_header(slide9, "7. 실제 시스템 작동 시연 화면")
     
-    # Large dotted/dashed placeholder area in the center
-    # python-pptx doesn't easily set line styles to dash, but we can draw a beautiful box with guidance text
-    placeholder = slide9.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.8), Inches(11.733), Inches(4.5))
-    placeholder.fill.solid()
-    placeholder.fill.fore_color.rgb = PANEL_COLOR
-    placeholder.line.color.rgb = TEXT_MUTED
-    placeholder.line.width = Pt(2.0)
+    # Left Col (Width: 5.6)
+    try_add_image(slide9, "../images/full_system_view.jpg", Inches(0.8), Inches(1.8), Inches(5.6), Inches(2.1))
+    lbl1 = slide9.shapes.add_textbox(Inches(0.8), Inches(3.9), Inches(5.6), Inches(0.3))
+    lbl1.text_frame.paragraphs[0].text = "🖥️ 전체 연동 시스템 (라즈베리파이 2대 + 브레드보드 + 대시보드 브라우저)"
+    lbl1.text_frame.paragraphs[0].font.size = Pt(8.5)
+    lbl1.text_frame.paragraphs[0].font.color.rgb = TEXT_MUTED
     
-    tf_place = placeholder.text_frame
-    tf_place.word_wrap = True
-    tf_place.margin_left = Inches(0.5)
-    tf_place.margin_right = Inches(0.5)
-    tf_place.margin_top = Inches(1.2)
+    try_add_image(slide9, "../images/browser_pi_A_pi_B_view.png", Inches(0.8), Inches(4.3), Inches(5.6), Inches(2.1))
+    lbl2 = slide9.shapes.add_textbox(Inches(0.8), Inches(6.4), Inches(5.6), Inches(0.3))
+    lbl2.text_frame.paragraphs[0].text = "💻 웹 대시보드 및 터미널 모니터링 (Apache 웹 브라우저 + SSH 터미널)"
+    lbl2.text_frame.paragraphs[0].font.size = Pt(8.5)
+    lbl2.text_frame.paragraphs[0].font.color.rgb = TEXT_MUTED
+
+    # Right Col (Width: 5.6)
+    try_add_image(slide9, "../images/pi_A_pi_B_view.jpg", Inches(6.9), Inches(1.8), Inches(5.6), Inches(2.1))
+    lbl3 = slide9.shapes.add_textbox(Inches(6.9), Inches(3.9), Inches(5.6), Inches(0.3))
+    lbl3.text_frame.paragraphs[0].text = "🔌 라즈베리파이 2대 및 회로 구성 (네트워크 연동 및 브레드보드 연결)"
+    lbl3.text_frame.paragraphs[0].font.size = Pt(8.5)
+    lbl3.text_frame.paragraphs[0].font.color.rgb = TEXT_MUTED
     
-    p_cam = tf_place.paragraphs[0]
-    p_cam.text = "📷"
-    p_cam.alignment = PP_ALIGN.CENTER
-    p_cam.font.size = Pt(36)
-    p_cam.space_after = Pt(10)
+    try_add_image(slide9, "../images/pi_B_view.jpg", Inches(6.9), Inches(4.3), Inches(2.7), Inches(2.1))
+    lbl4 = slide9.shapes.add_textbox(Inches(6.9), Inches(6.4), Inches(2.7), Inches(0.3))
+    lbl4.text_frame.paragraphs[0].text = "⚙️ Pi B 제어부"
+    lbl4.text_frame.paragraphs[0].font.size = Pt(8.5)
+    lbl4.text_frame.paragraphs[0].font.color.rgb = TEXT_MUTED
     
-    p_msg1 = tf_place.add_paragraph()
-    p_msg1.text = "[ 실제 작동 이미지 영역 ]"
-    p_msg1.alignment = PP_ALIGN.CENTER
-    p_msg1.font.name = FONT_TITLE
-    p_msg1.font.size = Pt(18)
-    p_msg1.font.bold = True
-    p_msg1.font.color.rgb = COLOR_AMBER
-    p_msg1.space_after = Pt(10)
-    
-    p_msg2 = tf_place.add_paragraph()
-    p_msg2.text = "추후 제공해주실 실제 동작 화면 및 연동 회로 하드웨어 실물 이미지를 배치할 공간입니다.\n\n" \
-                  "예시: 웹 대시보드(index.html) 예약 상태 카드 화면,\n" \
-                  "라즈베리 파이 B 하드웨어(LED 신호등, 16x2 LCD 문자 출력, 부저) 조립 및 실습 장치 사진"
-    p_msg2.alignment = PP_ALIGN.CENTER
-    p_msg2.font.name = FONT_BODY
-    p_msg2.font.size = Pt(13)
-    p_msg2.font.color.rgb = TEXT_WHITE
+    try_add_image(slide9, "../images/breadboard_view.jpg", Inches(9.8), Inches(4.3), Inches(2.7), Inches(2.1))
+    lbl5 = slide9.shapes.add_textbox(Inches(9.8), Inches(6.4), Inches(2.7), Inches(0.3))
+    lbl5.text_frame.paragraphs[0].text = "🚨 액추에이터 회로"
+    lbl5.text_frame.paragraphs[0].font.size = Pt(8.5)
+    lbl5.text_frame.paragraphs[0].font.color.rgb = TEXT_MUTED
 
     # ----------------------------------------------------
-    # SLIDE 10: Future Potential (향후 발전 가능성) - [NEW]
+    # SLIDE 10: Future Potential (향후 발전 가능성)
     # ----------------------------------------------------
     slide10 = prs.slides.add_slide(slide_layout)
     set_slide_background(slide10)
     add_slide_header(slide10, "8. 향후 시스템 발전 가능성")
     
-    # 4 horizontal card bands describing enhancements
     potentials = [
-        ("🌐 클라우드 데이터베이스 연동 확장", "현재는 로컬 data.json 데이터 저장소를 사용하여 동네 또는 단일 실습실 제어에 한정되어 있습니다. 향후 Firebase나 AWS 클라우드 RDB 및 NoSQL 연동을 적용하여, 전국에 분산된 공유회의실이나 스마트 물품 보관 지점들의 상태를 통합 제어하고 동기화할 수 있도록 대규모 분산 구조로 확장 가능합니다."),
-        ("📱 전용 모바일 앱 및 하이브리드 PWA 연동", "사용자 접근성을 극대화하기 위해 반응형 웹을 넘어 전용 하이브리드 앱 또는 Progressive Web App(PWA)을 배포합니다. 실시간 잔여시간 만료 1분 전 및 노쇼 경고 시 모바일 푸시 알림(FCM Push Notification) 서비스를 연동하여 이용 회전 효과를 극대화합니다."),
-        ("🔑 생체 정보 및 NFC 카드 본인인증 접목", "4자리 숫자를 입력하는 수동 PIN 번호 방식 외에, 라즈베리 파이에 NFC 리더기를 연동하여 학생증 카드나 사원증 태그를 접목하거나 지문 인식 모듈을 통해 보안성과 현장 사용 인증 편의성을 한 단계 업그레이드합니다."),
-        ("📈 빅데이터 기반 자원 사용 분석 대시보드", "데이터베이스에 누적되는 예약 시간대, 기기별 가동률, 주로 취소/노쇼가 발생하는 원인을 인공지능 알고리즘과 BI 툴을 결합하여 분석합니다. 이를 통해 수요가 쏠리는 시간대의 예약 가중치 설정 및 공용 공간 자재 재배치 최적화 의사결정을 지원합니다.")
+        ("🌐 클라우드 데이터베이스 연동 확장", "로컬 data.json 파일 DB를 클라우드 RDB/NoSQL 구조로 전면 업그레이드. 다수의 보관함 및 지점 자원을 글로벌 단위 단일 망 통합 모니터링 구조로 확장 가능."),
+        ("📱 전용 모바일 앱 및 하이브리드 PWA 연동", "PWA 및 모바일 전용 하이브리드 앱을 배포하여 접근성 극대화. 사용 기기 반납 1분 전 리마인드 푸시 및 비상시 강제 만료 즉각 앱 알림 송출."),
+        ("🔑 생체 정보 및 NFC 카드 본인인증 접목", "수동 PIN 패스코드 입력 외에 학생증/사원증 NFC 하드웨어 리더 리포지토리 연동. 지문 인식 회로 등을 연계하여 높은 현장 보안성 및 원터치 편의 획득."),
+        ("📈 빅데이터 기반 자원 사용 분석 대시보드", "예약 부도(No-show) 데이터 누적 분석을 통한 AI 기반 예약 패널티 및 차등 부여. 자원 배치 최적화 리포트 도출.")
     ]
     
-    col_w2 = Inches(5.6)
-    col_h2 = Inches(2.1)
+    col_w2 = Inches(2.85)
+    col_h2 = Inches(2.0)
     
     for idx, (title, desc) in enumerate(potentials):
         col_idx = idx % 2
         row_idx = idx // 2
         
-        left_pos = Inches(0.8) if col_idx == 0 else Inches(6.9)
-        top_pos = Inches(1.8) if row_idx == 0 else Inches(4.3)
+        left_pos = Inches(0.8) if col_idx == 0 else Inches(3.95)
+        top_pos = Inches(1.8) if row_idx == 0 else Inches(4.1)
         
         card = slide10.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, left_pos, top_pos, col_w2, col_h2)
         card.fill.solid()
@@ -721,24 +802,27 @@ def create_presentation(filename="presentation.pptx"):
         
         tf_card = card.text_frame
         tf_card.word_wrap = True
-        tf_card.margin_left = Inches(0.2)
-        tf_card.margin_right = Inches(0.2)
+        tf_card.margin_left = Inches(0.15)
+        tf_card.margin_right = Inches(0.15)
         tf_card.margin_top = Inches(0.15)
         
         p = tf_card.paragraphs[0]
         p.text = title
         p.font.name = FONT_TITLE
-        p.font.size = Pt(14)
+        p.font.size = Pt(11)
         p.font.bold = True
         p.font.color.rgb = COLOR_EMERALD if idx%2==0 else COLOR_AMBER
-        p.space_after = Pt(6)
+        p.space_after = Pt(4)
         
         p_desc = tf_card.add_paragraph()
         p_desc.text = desc
         p_desc.font.name = FONT_BODY
-        p_desc.font.size = Pt(10.5)
+        p_desc.font.size = Pt(8.5)
         p_desc.font.color.rgb = TEXT_WHITE
-        p_desc.space_after = Pt(4)
+        p_desc.space_after = Pt(2)
+        
+    # AI Illustration on the Right
+    try_add_image(slide10, "../images/future_expansion_illustration.png", Inches(7.1), Inches(1.8), Inches(5.4), Inches(4.3))
 
     # ----------------------------------------------------
     # SLIDE 11: Conclusions & Q&A
@@ -747,7 +831,7 @@ def create_presentation(filename="presentation.pptx"):
     set_slide_background(slide11)
     add_slide_header(slide11, "9. 결론 및 기대효과")
     
-    concl_panel = slide11.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.8), Inches(11.733), Inches(4.5))
+    concl_panel = slide11.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(1.8), Inches(6.8), Inches(4.5))
     concl_panel.fill.solid()
     concl_panel.fill.fore_color.rgb = PANEL_COLOR
     concl_panel.line.color.rgb = COLOR_EMERALD
@@ -755,16 +839,16 @@ def create_presentation(filename="presentation.pptx"):
     
     tf_con = concl_panel.text_frame
     tf_con.word_wrap = True
-    tf_con.margin_left = Inches(0.3)
+    tf_con.margin_left = Inches(0.25)
     tf_con.margin_top = Inches(0.25)
     
     p = tf_con.paragraphs[0]
     p.text = "🌟 공유 자원의 효율적 운영과 질서 있는 공동체 문화 확립"
     p.font.name = FONT_TITLE
-    p.font.size = Pt(20)
+    p.font.size = Pt(14)
     p.font.color.rgb = COLOR_EMERALD
     p.font.bold = True
-    p.space_after = Pt(16)
+    p.space_after = Pt(12)
     
     conclusions = [
         "무단 점유 및 오용 방지: 4자리 PIN 기반 자율 인증 체계로 무단 상태 해제 및 점유 가로채기 갈등 해결",
@@ -776,10 +860,13 @@ def create_presentation(filename="presentation.pptx"):
         p = tf_con.add_paragraph()
         p.text = "✔ " + con_text
         p.font.name = FONT_BODY
-        p.font.size = Pt(13)
+        p.font.size = Pt(10.5)
         p.font.color.rgb = TEXT_WHITE
-        p.space_before = Pt(6)
-        p.space_after = Pt(8)
+        p.space_before = Pt(4)
+        p.space_after = Pt(6)
+        
+    # AI Illustration on the Right
+    try_add_image(slide11, "../images/conclusion_illustration.png", Inches(8.0), Inches(1.8), Inches(4.5), Inches(4.5))
 
     # Save
     try:

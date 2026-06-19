@@ -545,180 +545,323 @@
       background: linear-gradient(90deg, var(--color-emerald), var(--color-amber), var(--color-blue));
     }
 
-    /* 구성도 다이어그램 (Slide 6) */
-    .diag-container {
+    /* UML Component Diagram CSS (Slide 6) */
+    .uml-component-diag {
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 100%;
       height: 100%;
-      padding: 0 1rem;
+      padding: 1rem;
+    }
+
+    .uml-comp-node {
+      background: rgba(30, 41, 59, 0.85);
+      border: 2px solid var(--color-emerald);
+      border-radius: 16px;
+      padding: 1.5rem;
+      width: 36%;
+      min-height: 290px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    }
+
+    .uml-comp-node.alt {
+      border-color: var(--color-amber);
+    }
+
+    .uml-comp-header {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      text-align: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-family: var(--font-en);
+    }
+
+    .uml-comp-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .uml-sub-comp {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      padding: 0.5rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      font-family: var(--font-en);
+    }
+
+    .uml-comp-connectors {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      width: 24%;
+      align-items: center;
+    }
+
+    .uml-connector-arrow {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       position: relative;
     }
 
-    .diag-node {
-      background: rgba(30, 41, 59, 0.85);
-      border: 2px solid var(--color-emerald);
-      border-radius: 20px;
-      padding: 1.8rem;
-      width: 31%;
-      min-height: 310px;
+    .uml-conn-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      font-family: var(--font-en);
+    }
+
+    .uml-arrow-line {
+      width: 100%;
+      height: 2px;
+      background: var(--color-emerald);
+      position: relative;
+    }
+
+    .uml-arrow-line.left-arrow {
+      background: var(--color-amber);
+    }
+
+    .uml-arrow-line::after {
+      content: "";
+      position: absolute;
+      top: -4px;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 8px solid var(--color-emerald);
+    }
+
+    .uml-arrow-line.left-arrow::after {
+      left: 0;
+      right: auto;
+      border-left: none;
+      border-right: 8px solid var(--color-amber);
+    }
+
+    .uml-comp-hw-ports {
+      margin-top: 1rem;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+      padding-top: 0.6rem;
+      text-align: center;
+    }
+
+    .uml-hw-arrow {
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: var(--color-amber);
+      font-family: var(--font-en);
+    }
+
+    /* UML Sequence Diagram CSS (Slide 7) */
+    .uml-sequence-diag {
       display: flex;
       flex-direction: column;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 16px;
+      padding: 1.2rem;
+      overflow: hidden;
+    }
+
+    .uml-seq-headers {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      text-align: center;
+      margin-bottom: 0.8rem;
+    }
+
+    .uml-lifeline-head {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.5rem 0.2rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-white);
+      max-width: 170px;
+      margin: 0 auto;
+      width: 90%;
+    }
+
+    .uml-seq-body {
+      position: relative;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.68rem;
+      padding-top: 0.4rem;
+    }
+
+    .uml-vertical-line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.15);
+      border-style: dashed;
+      z-index: 1;
+    }
+
+    .uml-vertical-line.col1 { left: 12.5%; }
+    .uml-vertical-line.col2 { left: 37.5%; }
+    .uml-vertical-line.col3 { left: 62.5%; }
+    .uml-vertical-line.col4 { left: 87.5%; }
+
+    .uml-msg-row {
+      position: relative;
+      height: 24px;
+      width: 100%;
       z-index: 5;
     }
 
-    .diag-node.networks {
-      border-color: var(--color-blue);
-      min-height: 220px;
+    .uml-msg-arrow {
+      position: absolute;
+      height: 2px;
+      background: var(--color-emerald);
+      display: flex;
       justify-content: center;
       align-items: center;
-      width: 28%;
-      position: relative;
-    }
-
-    .diag-node.pi-b {
-      border-color: var(--color-amber);
-    }
-
-    .diag-node h3 {
-      font-size: 1.25rem;
-      margin-bottom: 1.2rem;
-      text-align: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 0.6rem;
+      font-size: 0.8rem;
       font-weight: 700;
-    }
-
-    .diag-sub-list {
-      list-style: none;
-      font-size: 0.9rem;
-    }
-
-    .diag-sub-list li {
-      margin-bottom: 0.8rem;
       color: #e2e8f0;
-      padding-left: 1rem;
-      position: relative;
-      line-height: 1.5;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+      padding-bottom: 14px;
     }
 
-    .diag-sub-list li::before {
-      content: "▪";
+    .uml-msg-arrow::after {
+      content: "";
+      position: absolute;
+      top: -4px;
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+    }
+
+    .uml-msg-arrow.dashed {
+      background: none;
+      border-top: 2px dashed var(--color-blue);
+      color: #94a3b8;
+    }
+
+    .uml-msg-arrow.dashed::after {
+      border-top-color: transparent !important;
+      border-bottom-color: transparent !important;
+    }
+
+    /* 호출 화살표 위치 계산 */
+    .from1to2 {
+      left: 12.5%;
+      width: 25%;
+      background: var(--color-emerald);
+    }
+    .from1to2::after {
+      right: 0;
+      border-left: 8px solid var(--color-emerald);
+    }
+
+    .from2to3 {
+      left: 37.5%;
+      width: 25%;
+      background: var(--color-emerald);
+    }
+    .from2to3::after {
+      right: 0;
+      border-left: 8px solid var(--color-emerald);
+    }
+
+    .from3to4 {
+      left: 62.5%;
+      width: 25%;
+      background: var(--color-amber);
+    }
+    .from3to4::after {
+      right: 0;
+      border-left: 8px solid var(--color-amber);
+    }
+
+    .from4to1.dashed {
+      left: 12.5%;
+      width: 75%;
+      border-top-color: var(--color-blue);
+    }
+    .from4to1.dashed::after {
+      left: 0;
+      border-right: 8px solid var(--color-blue);
+    }
+
+    .from1to3 {
+      left: 12.5%;
+      width: 50%;
+      background: var(--color-emerald);
+    }
+    .from1to3::after {
+      right: 0;
+      border-left: 8px solid var(--color-emerald);
+    }
+
+    .from3to1.dashed {
+      left: 12.5%;
+      width: 50%;
+      border-top-color: var(--color-blue);
+    }
+    .from3to1.dashed::after {
+      left: 0;
+      border-right: 8px solid var(--color-blue);
+    }
+
+    /* 자체 호출 (Self Call) */
+    .uml-msg-self {
+      position: absolute;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--color-amber);
+      padding-left: 20px;
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+
+    .uml-msg-self::before {
+      content: "";
       position: absolute;
       left: 0;
-      color: var(--color-emerald);
+      top: -3px;
+      width: 14px;
+      height: 18px;
+      border: 2px solid var(--color-amber);
+      border-left: none;
+      border-bottom: none;
+      border-radius: 0 4px 0 0;
     }
 
-    .diag-node.pi-b .diag-sub-list li::before {
+    .uml-msg-self::after {
+      content: "➔";
       color: var(--color-amber);
-    }
-
-    .diag-connector {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      width: 100%;
-      align-items: center;
-    }
-
-    .connector-line {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      height: 2px;
-      position: relative;
-    }
-
-    /* 세로형 타임라인 흐름도 (Slide 7) */
-    .flow-timeline {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-      width: 100%;
-      padding-left: 3rem;
-      margin: 1rem 0;
-    }
-
-    .flow-timeline::before {
-      content: "";
+      font-size: 0.7rem;
       position: absolute;
-      left: 1.2rem;
-      top: 10px;
-      bottom: 10px;
-      width: 4px;
-      background: linear-gradient(to bottom, var(--color-emerald), var(--color-amber), var(--color-blue));
-      border-radius: 99px;
+      left: -2px;
+      top: 9px;
     }
 
-    .flow-node {
-      position: relative;
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      padding: 0.85rem 1.75rem;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      transition: all 0.3s ease;
-    }
-
-    .flow-node:hover {
-      background: rgba(30, 41, 59, 0.5);
-      border-color: rgba(255, 255, 255, 0.08);
-      transform: translateX(5px);
-    }
-
-    .flow-node::after {
-      content: "";
-      position: absolute;
-      left: -2.15rem;
-      top: calc(50% - 10px);
-      width: 20px;
-      height: 20px;
-      background: var(--bg-dark);
-      border: 4px solid var(--color-emerald);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--color-emerald);
-      z-index: 10;
-      transition: all 0.3s ease;
-    }
-
-    .flow-node:hover::after {
-      transform: scale(1.2);
-    }
-
-    .flow-node:nth-child(even)::after {
-      border-color: var(--color-amber);
-      box-shadow: 0 0 10px var(--color-amber);
-    }
-
-    .flow-node:last-child::after {
-      border-color: var(--color-blue);
-      box-shadow: 0 0 10px var(--color-blue);
-    }
-
-    .flow-node-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--color-emerald);
-      min-width: 200px;
-    }
-
-    .flow-node:nth-child(even) .flow-node-title {
-      color: var(--color-amber);
-    }
-
-    .flow-node:last-child .flow-node-title {
-      color: var(--color-blue);
-    }
-
-    .flow-node-desc {
-      font-size: 0.9rem;
-      color: #f1f5f9;
-      line-height: 1.5;
-    }
+    .uml-msg-self.col3 { left: 62.5%; }
 
     /* 시연 이미지 그리드 레이아웃 (Slide 9) */
     .demo-grid {
@@ -1010,7 +1153,7 @@
       </div>
     </div>
 
-    <!-- SLIDE 3: Problem & Objective (AI 일러스트 분할 배치) -->
+    <!-- SLIDE 3: Problem & Objective -->
     <div class="slide" id="slide-3">
       <div class="slide-header">
         <div>
@@ -1052,7 +1195,7 @@
       </div>
     </div>
 
-    <!-- SLIDE 4: Equipment Used (사용 장비 - 사진 추가) -->
+    <!-- SLIDE 4: Equipment Used (사용 장비 - 사진 수정 완료) -->
     <div class="slide" id="slide-4">
       <div class="slide-header">
         <div>
@@ -1063,10 +1206,10 @@
       </div>
       <div class="slide-content">
         <div class="four-col-layout">
-          <!-- Item 1: RPi -->
+          <!-- Item 1: RPi (2대 사진 pi_A_pi_B_view.jpg로 수정) -->
           <div class="grid-card">
             <div class="card-img-box">
-              <img src="../images/pi_B_view.jpg" alt="Raspberry Pi 4">
+              <img src="../images/pi_A_pi_B_view.jpg" alt="Raspberry Pi 4 2대">
             </div>
             <h3>라즈베리 파이 4 (2대)</h3>
             <div class="card-caption">시스템 제어 핵심 코어</div>
@@ -1083,19 +1226,19 @@
             <h3>삼색 LED (3개)</h3>
             <div class="card-caption">직관적 상태 시각 피드백</div>
             <ul>
-              <li>멀리서도 자원 현황을 즉시 확인 가능한 LED 신호등 구성</li>
+              <li>자원의 점유 여부를 3색 신호등 방식으로 즉시 파악</li>
               <li>초록(대기), 노랑(예약), 빨강(사용)으로 즉각 동기화</li>
             </ul>
           </div>
-          <!-- Item 3: LCD -->
+          <!-- Item 3: LCD (Pi B와 LCD가 부착된 pi_B_view.jpg로 수정) -->
           <div class="grid-card">
             <div class="card-img-box">
-              <img src="../images/breadboard_view.jpg" alt="Character LCD">
+              <img src="../images/pi_B_view.jpg" alt="Character LCD & Pi B">
             </div>
             <h3>16x2 Character LCD</h3>
             <div class="card-caption">Focused 자원 명세 출력</div>
             <ul>
-              <li>현재 지정 모니터링 대상인 자원의 영문명 및 상태 정보 출력</li>
+              <li>지정 모니터링 대상인 자원의 영문명 및 상태 정보 출력</li>
               <li>가변저항 회로 설계를 통해 글자 선명도(Contrast) 물리 제어</li>
             </ul>
           </div>
@@ -1119,7 +1262,7 @@
       </div>
     </div>
 
-    <!-- SLIDE 5: Development Schedule (프로젝트 일정표 Gantt 차트) -->
+    <!-- SLIDE 5: Development Schedule -->
     <div class="slide" id="slide-5">
       <div class="slide-header">
         <div>
@@ -1192,53 +1335,51 @@
       </div>
     </div>
 
-    <!-- SLIDE 6: Overall System Structure (구성도 시각화 다이어그램) -->
+    <!-- SLIDE 6: UML Component Diagram (전체 시스템 구성도) -->
     <div class="slide" id="slide-6">
       <div class="slide-header">
         <div>
-          <div class="slide-category">System Architecture</div>
-          <h2 class="slide-title">4. 전체 시스템 구성 다이어그램</h2>
+          <div class="slide-category">UML Component Diagram</div>
+          <h2 class="slide-title">4. 전체 시스템 구성도 (UML Component Diagram)</h2>
         </div>
         <div class="slide-num-badge">06 / 11</div>
       </div>
       <div class="slide-content">
-        <div class="diag-container">
-          <!-- Node 1: Pi A -->
-          <div class="diag-node">
-            <h3>📟 Pi A (Web Gateway)</h3>
-            <ul class="diag-sub-list">
-              <li><strong>Apache Web Server:</strong> 포트 80에서 대시보드 서빙</li>
-              <li><strong>index.html & app.js:</strong> 웹 UI 렌더링 및 1초 단위 타이머 카운트다운</li>
-              <li><strong>CGI (update_status.py):</strong> 웹 요청 접수 및 Pi B 소켓 송신</li>
-            </ul>
-          </div>
-          
-          <!-- Node 2: Connection Channels -->
-          <div class="diag-node networks">
-            <h3>🔌 연동 네트워크망</h3>
-            <div class="diag-connector">
-              <div style="font-size: 0.78rem; text-align: center; color: var(--color-emerald); font-weight: bold;">
-                [제어 명령] TCP Socket (Port 50007)
-              </div>
-              <div class="connector-line" style="background: var(--color-emerald);"></div>
-              
-              <div style="font-size: 0.78rem; text-align: center; color: var(--color-amber); font-weight: bold;">
-                [상태 조회] HTTP REST API (Port 5000)
-              </div>
-              <div class="connector-line" style="background: var(--color-amber);"></div>
+        <div class="uml-component-diag">
+          <!-- Component: Pi A -->
+          <div class="uml-comp-node">
+            <div class="uml-comp-header">«component»<br>Pi A (Web Gateway)</div>
+            <div class="uml-comp-body">
+              <div class="uml-sub-comp">«component» Dashboard UI (app.js)</div>
+              <div class="uml-sub-comp">«component» CGI Client (update_status.py)</div>
             </div>
           </div>
           
-          <!-- Node 3: Pi B -->
-          <div class="diag-node pi-b">
-            <h3>⚙️ Pi B (Hardware Core)</h3>
-            <ul class="diag-sub-list">
-              <li><strong>Flask REST API:</strong> 전역 예약 상태 JSON 반환</li>
-              <li><strong>Socket Thread:</strong> TCP 포트 50007에서 실시간 제어 수신</li>
-              <li><strong>state_lock:</strong> Mutex Lock을 통한 스레드 안전성 확보</li>
-              <li><strong>data.json DB:</strong> 상태 데이터 영속성 기록</li>
-              <li><strong>GPIO 제어:</strong> LED/LCD/부저 직접 구동</li>
-            </ul>
+          <!-- Interface Connectors -->
+          <div class="uml-comp-connectors">
+            <div class="uml-connector-arrow">
+              <div class="uml-conn-label">«interface» TCP:50007 (Command)</div>
+              <div class="uml-arrow-line"></div>
+            </div>
+            <div class="uml-connector-arrow">
+              <div class="uml-conn-label">«interface» HTTP:5000 (Polling)</div>
+              <div class="uml-arrow-line left-arrow"></div>
+            </div>
+          </div>
+          
+          <!-- Component: Pi B -->
+          <div class="uml-comp-node alt">
+            <div class="uml-comp-header">«component»<br>Pi B (Hardware Core)</div>
+            <div class="uml-comp-body">
+              <div class="uml-sub-comp">«component» Flask REST API</div>
+              <div class="uml-sub-comp">«component» Socket Listener (Thread)</div>
+              <div class="uml-sub-comp">«component» Mutex Lock (state_lock)</div>
+              <div class="uml-sub-comp">«component» JSON DB (data.json)</div>
+            </div>
+            <!-- Ports out to HW -->
+            <div class="uml-comp-hw-ports">
+              <div class="uml-hw-arrow">«port» GPIO ➔ LEDs / LCD / Buzzer</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1248,46 +1389,58 @@
       </div>
     </div>
 
-    <!-- SLIDE 7: Overall Flowchart (연동 흐름도 시각화) -->
+    <!-- SLIDE 7: UML Sequence Diagram (전체 시스템 연동 흐름도) -->
     <div class="slide" id="slide-7">
       <div class="slide-header">
         <div>
-          <div class="slide-category">System Flowchart</div>
-          <h2 class="slide-title">5. 전체 시스템 연동 흐름도 (Timeline Flow)</h2>
+          <div class="slide-category">UML Sequence Diagram</div>
+          <h2 class="slide-title">5. 전체 시스템 연동 흐름도 (UML Sequence Diagram)</h2>
         </div>
         <div class="slide-num-badge">07 / 11</div>
       </div>
       <div class="slide-content">
-        <div class="flow-timeline">
-          <!-- Step 1 -->
-          <div class="flow-node">
-            <div class="flow-node-title">1. 웹 예약/제어 요청</div>
-            <div class="flow-node-desc">사용자가 브라우저 대시보드(index.html)에서 예약 신청 및 4자리 본인 식별용 PIN번호 설정</div>
+        <div class="uml-sequence-diag">
+          <!-- Lifelines Header -->
+          <div class="uml-seq-headers">
+            <div class="uml-lifeline-head">🧑‍💻 User<br>(Dashboard)</div>
+            <div class="uml-lifeline-head">📟 Pi A<br>(Gateway)</div>
+            <div class="uml-lifeline-head">⚙️ Pi B<br>(Core Server)</div>
+            <div class="uml-lifeline-head">🚨 Hardware<br>(Actuators)</div>
           </div>
-          <!-- Step 2 -->
-          <div class="flow-node">
-            <div class="flow-node-title">2. CGI 소켓 포워딩</div>
-            <div class="flow-node-desc">Pi A Apache 서버의 CGI 스크립트가 요청을 소켓 데이터로 포맷팅하여 Pi B의 포트 50007로 저지연 TCP 송출</div>
-          </div>
-          <!-- Step 3 -->
-          <div class="flow-node">
-            <div class="flow-node-title">3. 소켓 수신 & Mutex Lock</div>
-            <div class="flow-node-desc">Pi B 백그라운드 소켓 스레드가 데이터를 접수하고, Flask 조회 스레드와의 데이터 레이싱을 막기 위해 Mutex Lock을 얻어 data.json 갱신</div>
-          </div>
-          <!-- Step 4 -->
-          <div class="flow-node">
-            <div class="flow-node-title">4. 하드웨어 피드백 구동</div>
-            <div class="flow-step-desc">변경된 상태값에 맞추어 GPIO 액추에이터 제어 (LED 색 변경, 피에조 부저 도-미-솔 재생, Focused LCD 텍스트 갱신)</div>
-          </div>
-          <!-- Step 5 -->
-          <div class="flow-node">
-            <div class="flow-node-title">5. 타이머 만료 감시 데몬</div>
-            <div class="flow-node-desc">Pi B 백그라운드 데몬 스레드가 1초 주기로 돌며 노쇼 만료(1분) 및 사용 시간초과(3분) 검출 시 즉각 강제 대기 반납</div>
-          </div>
-          <!-- Step 6 -->
-          <div class="flow-node">
-            <div class="flow-node-title">6. 웹 화면 실시간 동기화</div>
-            <div class="flow-node-desc">브라우저가 5초마다 Flask API(/api/status)를 비동기 호출해 전역 상태 및 타이머 카운트다운을 대시보드에 업데이트</div>
+          
+          <!-- Lifelines Body Container -->
+          <div class="uml-seq-body">
+            <!-- Vertical Lifeline Lines -->
+            <div class="uml-vertical-line col1"></div>
+            <div class="uml-vertical-line col2"></div>
+            <div class="uml-vertical-line col3"></div>
+            <div class="uml-vertical-line col4"></div>
+            
+            <!-- Messages Rows -->
+            <div class="uml-msg-row">
+              <div class="uml-msg-arrow from1to2">1. 예약/사용 요청 (PIN 입력)</div>
+            </div>
+            <div class="uml-msg-row">
+              <div class="uml-msg-arrow from2to3">2. TCP Socket 전송 (Port 50007)</div>
+            </div>
+            <div class="uml-msg-row">
+              <div class="uml-msg-self col3">3. Mutex Lock 획득 & DB 파일 갱신</div>
+            </div>
+            <div class="uml-msg-row">
+              <div class="uml-msg-arrow from3to4">4. GPIO 제어 신호 출력</div>
+            </div>
+            <div class="uml-msg-row">
+              <div class="uml-msg-arrow from4to1 dashed">5. LED 상태색 점등, 부저 멜로디 및 LCD 텍스트 피드백</div>
+            </div>
+            <div class="uml-msg-row">
+              <div class="uml-msg-self col3">6. 만료 스케줄러 (1초 루프 감시 - No-show/사용 초과 강제 해제)</div>
+            </div>
+            <div class="uml-msg-row">
+              <div class="uml-msg-arrow from1to3">7. HTTP REST API 조회 (5초 주기 비동기 폴링)</div>
+            </div>
+            <div class="uml-msg-row">
+              <div class="uml-msg-arrow from3to1 dashed">8. JSON 전역 상태 및 타이머 카운트다운 정보 반환</div>
+            </div>
           </div>
         </div>
       </div>
@@ -1403,7 +1556,7 @@
       </div>
     </div>
 
-    <!-- SLIDE 10: Future Potential (향후 발전 가능성 - AI 일러스트 탑재) -->
+    <!-- SLIDE 10: Future Potential -->
     <div class="slide" id="slide-10">
       <div class="slide-header">
         <div>
@@ -1421,7 +1574,7 @@
               <h3>클라우드 DB 확장</h3>
               <div class="card-caption">AWS / Firebase 연동</div>
               <ul style="font-size: 0.8rem;">
-                <li>로컬 data.json 파일 DB를 클라우드 분산 RDB/NoSQL 구조로 전면 업그레이드</li>
+                <li>로컬 data.json 파일 DB를 클라우드 RDB/NoSQL 구조로 전면 업그레이드</li>
                 <li>다수의 보관함 및 지점 자원을 글로벌 단위 단일 망 통합 모니터링 구조로 확장</li>
               </ul>
             </div>
@@ -1468,7 +1621,7 @@
       </div>
     </div>
 
-    <!-- SLIDE 11: Conclusions & Expected Effects (AI 일러스트 탑재) -->
+    <!-- SLIDE 11: Conclusions & Expected Effects -->
     <div class="slide" id="slide-11">
       <div class="slide-header">
         <div>
