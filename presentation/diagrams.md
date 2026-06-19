@@ -41,16 +41,16 @@ graph TD
         Buzzer["Piezo Buzzer"]:::hw
     end
     
-    User -->|HTTP Request / static files| Apache
-    Apache -->|Execute| CGI
-    CGI -->|TCP Socket Command (Port 50007)| Socket
-    User -.->|HTTP REST API Polling (Port 5000)| Flask
-    Socket -->|Write State (Mutex)| Mutex
-    Flask -->|Read State (Mutex)| Mutex
-    Scheduler -->|Read/Write State (Mutex)| Mutex
+    User -->|"HTTP Request / static files"| Apache
+    Apache -->|"Execute"| CGI
+    CGI -->|"TCP Socket Command (Port 50007)"| Socket
+    User -.->|"HTTP REST API Polling (Port 5000)"| Flask
+    Socket -->|"Write State (Mutex)"| Mutex
+    Flask -->|"Read State (Mutex)"| Mutex
+    Scheduler -->|"Read/Write State (Mutex)"| Mutex
     
-    Socket -->|GPIO Control| HW
-    Scheduler -->|Auto Expiration / GPIO Control| HW
+    Socket -->|"GPIO Control"| HW
+    Scheduler -->|"Auto Expiration / GPIO Control"| HW
 ```
 
 ---
@@ -123,6 +123,6 @@ flowchart TD
         Scheduler -.->|상태 초기화| P2_WaitSock
     end
 
-    P1_Send ==>|TCP Packet| P2_WaitSock
-    Scheduler ==>|비상 회수 상태 전달| P1_Wait
+    P1_Send ==>|"TCP Packet"| P2_WaitSock
+    Scheduler ==>|"비상 회수 상태 전달"| P1_Wait
 ```
