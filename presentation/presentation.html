@@ -597,45 +597,84 @@
       line-height: 1.5;
     }
 
-    /* 이미지 플레이스홀더 레이아웃 (Slide 9) */
-    .image-placeholder-layout {
+    /* 시연 이미지 그리드 레이아웃 (Slide 9) */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 1rem;
       width: 100%;
       height: 100%;
-      border: 2px dashed rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
+    }
+
+    .demo-left {
       display: flex;
       flex-direction: column;
+      gap: 1rem;
+      height: 100%;
+    }
+
+    .demo-left-top {
+      flex: 1.3;
+    }
+
+    .demo-left-bottom {
+      flex: 1;
+    }
+
+    .demo-right {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      height: 100%;
+    }
+
+    .demo-right-top {
+      flex: 1.1;
+    }
+
+    .demo-right-bottom {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .demo-img-box {
+      position: relative;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
       justify-content: center;
       align-items: center;
-      background: rgba(15, 23, 42, 0.2);
-      padding: 3rem;
-      text-align: center;
+      height: 100%;
     }
 
-    .placeholder-icon {
-      font-size: 4rem;
-      margin-bottom: 1.2rem;
-      animation: pulse 2s infinite;
+    .demo-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
     }
 
-    .placeholder-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--color-amber);
-      margin-bottom: 0.8rem;
+    .demo-img-box:hover img {
+      transform: scale(1.04);
     }
 
-    .placeholder-desc {
-      font-size: 1rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      max-width: 700px;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 0.6; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.05); }
-      100% { opacity: 0.6; transform: scale(1); }
+    .demo-img-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      padding: 0.4rem 0.8rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-white);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(4px);
+      text-align: left;
     }
 
     /* 결론 슬라이드 (Slide 11) */
@@ -1162,12 +1201,35 @@
         <div class="slide-num-badge">09 / 11</div>
       </div>
       <div class="slide-content">
-        <div class="image-placeholder-layout">
-          <div class="placeholder-icon">📷</div>
-          <div class="placeholder-title">[ 실제 작동 시연 이미지 배치 공간 ]</div>
-          <p class="placeholder-desc">
-            추후 획득하실 대시보드 웹 브라우저(예약 완료/반납 카운트다운 테두리 적색 점멸 화면) 및 라즈베리 파이 기기의 조립 회로 실물 동작 사진(삼색 LED 점등, 16x2 LCD 영문 상태 출력, 피에조 부저 연결부)을 삽입할 슬라이드입니다.
-          </p>
+        <div class="demo-grid">
+          <!-- 좌측 열: 연동 시스템 및 소프트웨어 모니터링 -->
+          <div class="demo-left">
+            <div class="demo-left-top demo-img-box">
+              <img src="../images/full_system_view.jpg" alt="전체 연동 시스템">
+              <div class="demo-img-caption">🖥️ 전체 연동 시스템 (라즈베리파이 2대 + 브레드보드 + 대시보드 브라우저 & SSH)</div>
+            </div>
+            <div class="demo-left-bottom demo-img-box">
+              <img src="../images/browser_pi_A_pi_B_view.png" alt="웹 대시보드 및 터미널 모니터링">
+              <div class="demo-img-caption">💻 웹 대시보드 및 터미널 모니터링 (Apache 웹 브라우저 + Pi A / Pi B SSH 터미널)</div>
+            </div>
+          </div>
+          <!-- 우측 열: 하드웨어 상세 및 회로 배선 -->
+          <div class="demo-right">
+            <div class="demo-right-top demo-img-box">
+              <img src="../images/pi_A_pi_B_view.jpg" alt="라즈베리파이 2대 및 회로">
+              <div class="demo-img-caption">🔌 라즈베리파이 2대 및 회로 구성 (네트워크 연동 및 브레드보드 연결 상태)</div>
+            </div>
+            <div class="demo-right-bottom">
+              <div class="demo-img-box">
+                <img src="../images/pi_B_view.jpg" alt="Pi B 제어부">
+                <div class="demo-img-caption">⚙️ Pi B 제어부</div>
+              </div>
+              <div class="demo-img-box">
+                <img src="../images/breadboard_view.jpg" alt="액추에이터 회로">
+                <div class="demo-img-caption">🚨 액추에이터 회로</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="slide-footer">
