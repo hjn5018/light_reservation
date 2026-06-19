@@ -1557,59 +1557,9 @@
         </div>
         <div class="slide-num-badge">06 / 11</div>
       </div>
-      <div class="slide-content">
-        <div class="uml-component-diag">
-          <!-- Component: User (유저) -->
-          <div class="uml-comp-node user-node" style="border-color: var(--color-blue); width: 22%; min-height: 250px;">
-            <div class="uml-comp-header" style="color: var(--color-blue);">«actor»<br>User (Browser)</div>
-            <div class="uml-comp-body">
-              <div class="uml-sub-comp">Dashboard Web UI (index.html)</div>
-              <div class="uml-sub-comp">REST API Polling Client (app.js)</div>
-            </div>
-          </div>
-
-          <!-- Interface Connectors: User to Pi A -->
-          <div class="uml-comp-connectors" style="width: 8%; gap: 1rem;">
-            <div class="uml-connector-arrow">
-              <div class="uml-conn-label" style="font-size: 0.75rem;">HTTP:80</div>
-              <div class="uml-arrow-line" style="background: var(--color-blue);"></div>
-            </div>
-          </div>
-
-          <!-- Component: Pi A -->
-          <div class="uml-comp-node" style="width: 27%; min-height: 250px;">
-            <div class="uml-comp-header">«component»<br>Pi A (Web Gateway)</div>
-            <div class="uml-comp-body">
-              <div class="uml-sub-comp">«component» Apache Web Server</div>
-              <div class="uml-sub-comp">«component» CGI (update_status.py)</div>
-            </div>
-          </div>
-          
-          <!-- Interface Connectors: Pi A to Pi B -->
-          <div class="uml-comp-connectors" style="width: 12%; gap: 1.5rem;">
-            <div class="uml-connector-arrow">
-              <div class="uml-conn-label" style="font-size: 0.7rem;">TCP:50007 (Cmd)</div>
-              <div class="uml-arrow-line" style="background: var(--color-emerald);"></div>
-            </div>
-            <div class="uml-connector-arrow">
-              <div class="uml-conn-label" style="font-size: 0.7rem;">HTTP:5000 (Poll)</div>
-              <div class="uml-arrow-line left-arrow" style="background: var(--color-amber);"></div>
-            </div>
-          </div>
-          
-          <!-- Component: Pi B -->
-          <div class="uml-comp-node alt" style="width: 28%; min-height: 250px;">
-            <div class="uml-comp-header">«component»<br>Pi B (Hardware Core)</div>
-            <div class="uml-comp-body">
-              <div class="uml-sub-comp">«component» Flask REST API</div>
-              <div class="uml-sub-comp">«component» Socket Listener (Thread)</div>
-              <div class="uml-sub-comp">«component» Mutex Lock & data.json</div>
-            </div>
-            <!-- Ports out to HW -->
-            <div class="uml-comp-hw-ports" style="margin-top: 0.5rem; padding-top: 0.4rem;">
-              <div class="uml-hw-arrow" style="font-size: 0.75rem;">«port» GPIO ➔ LEDs / LCD / Buzzer</div>
-            </div>
-          </div>
+      <div class="slide-content" style="justify-content: center; align-items: center;">
+        <div class="illustration-box" style="width: 100%; height: 100%; border: 1px dashed rgba(255, 255, 255, 0.15); display: flex; justify-content: center; align-items: center; background: rgba(15, 23, 42, 0.2); border-radius: 20px;">
+          <img src="../images/system_architecture.png" alt="전체 시스템 구성도" style="max-height: 100%; max-width: 100%; object-fit: contain;">
         </div>
       </div>
       <div class="slide-footer">
@@ -1627,100 +1577,9 @@
         </div>
         <div class="slide-num-badge">07 / 11</div>
       </div>
-      <div class="slide-content" style="background: #ffffff; border-radius: 16px; padding: 0.5rem; overflow: hidden;">
-        <div class="flowchart-container">
-          <!-- PROCESS 1 -->
-          <div class="flowchart-col">
-            <div class="flowchart-col-title">PROCESS 1 (웹 클라이언트 및 CGI)</div>
-            
-            <div class="fc-shape fc-start-end">START<br>Web Portal</div>
-            <div class="fc-arrow">▼</div>
-            
-            <div class="fc-shape fc-init">
-              Apache Web &<br>
-              CGI Script Init<br>
-              (update_status.py)
-            </div>
-            <div class="fc-arrow">▼</div>
-            
-            <div class="fc-shape fc-rect" id="wait-control">웹 제어 대기</div>
-            <div class="fc-arrow">▼</div>
-            
-            <div class="fc-shape fc-decision">예약/반납<br>클릭?</div>
-            <div class="fc-arrow">▼ <span style="font-size:0.6rem; color:#ea580c; font-weight:bold; position:relative; top:-2px;">YES</span></div>
-            
-            <div class="fc-shape fc-rect">4자리 PIN<br>본인 확인 입력</div>
-            <div class="fc-arrow">▼</div>
-            
-            <div class="fc-shape fc-rect" style="border-color:#b91c1c; color:#b91c1c;">CGI 소켓 전송<br>(Port 50007)</div>
-            <div class="fc-arrow">▼</div>
-            
-            <div class="fc-shape fc-circle">SENSING</div>
-            
-            <!-- Loop arrow for Decision (NO) -->
-            <div class="fc-loop-arrow-left"></div>
-            <span style="font-size:0.6rem; color:#ea580c; font-weight:bold; position:absolute; left:22px; top:168px;">NO</span>
-          </div>
-          
-          <!-- SENSING / Polling -->
-          <div class="flowchart-col">
-            <div class="flowchart-col-title" style="background:#fffbeb; border-color:#eab308;">SENSING (상태 조회 및 갱신)</div>
-            
-            <div class="fc-shape fc-circle">SENSING</div>
-            <div class="fc-arrow">▼</div>
-            
-            <div class="fc-shape fc-rect">5초 주기 REST API<br>조회 (/api/status)</div>
-            <div class="fc-arrow">▼</div>
-            
-            <div class="fc-shape fc-decision">자원 상태<br>변경 감지?</div>
-            <div class="fc-arrow">▼ <span style="font-size:0.6rem; color:#ea580c; font-weight:bold; position:relative; top:-2px;">YES</span></div>
-            
-            <div class="fc-shape fc-rect">웹 UI 예약 카드<br>비동기 화면 갱신</div>
-            <div class="fc-arrow">▼</div>
-            
-            <div class="fc-shape fc-rect">5초 후<br>비동기 재폴링</div>
-            
-            <!-- Loop arrow for Decision (NO) -->
-            <div class="fc-loop-arrow"></div>
-            <span style="font-size:0.6rem; color:#ea580c; font-weight:bold; position:absolute; right:20px; top:158px;">NO</span>
-          </div>
-          
-          <!-- PROCESS 2 / Pi B -->
-          <div class="flowchart-col" style="width:34%;">
-            <div class="flowchart-col-title">PROCESS 2 (Pi B 하드웨어 코어)</div>
-            
-            <div class="fc-shape fc-start-end" style="border-color:#16a34a; color:#16a34a;">START<br>Socket Daemon</div>
-            <div class="fc-arrow">▼</div>
-            
-            <div class="fc-shape fc-rect">TCP 소켓 수신 대기<br>(Port 50007)</div>
-            <div class="fc-arrow">▼</div>
-            
-            <div class="fc-shape fc-decision" style="width:70%;">패킷 수신 및<br>PIN 검증?</div>
-            <div class="fc-arrow">▼ <span style="font-size:0.6rem; color:#ea580c; font-weight:bold; position:relative; top:-2px;">YES</span></div>
-            
-            <div class="fc-shape fc-rect">Mutex Lock 획득 후<br>data.json DB 갱신</div>
-            <div class="fc-arrow">▼</div>
-            
-            <!-- Hardware feedback big box -->
-            <div class="fc-large-box">
-              <div class="fc-box-header">물리 피드백 및 액추에이터 제어</div>
-              <div class="fc-box-item">삼색 LED 상태별 점등 (초록/노랑/빨강)</div>
-              <div class="fc-box-item" style="background:#fef08a; border-color:#eab308;">16x2 LCD 자원 상태 영문 출력</div>
-              <div class="fc-box-item">피에조 부저 멜로디 연주 (상승/하강음)</div>
-            </div>
-            
-            <!-- Daemon scheduler box -->
-            <div class="fc-ndk-box">
-              자동 회수 스케줄러 (1초 데몬 스레드)
-              <br><span style="font-size:0.6rem; font-weight:normal; color:#475569;">(노쇼 1분 폭파 / 사용한도 3분 회수)</span>
-            </div>
-            
-            <!-- Connection lines (red arrows like Android NDK in photo) -->
-            <!-- From large box to NDK-like scheduler -->
-            <div class="fc-ndk-red-line-1"></div>
-            <!-- From NDK-like scheduler to Process 1 client CGI or DB update -->
-            <div class="fc-ndk-red-line-2"></div>
-          </div>
+      <div class="slide-content" style="background: #ffffff; border-radius: 16px; padding: 0.5rem; justify-content: center; align-items: center; overflow: hidden; height: 100%;">
+        <div class="illustration-box" style="width: 100%; height: 100%; border: 1px dashed #cbd5e1; display: flex; justify-content: center; align-items: center; background: #f8fafc; border-radius: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.02);">
+          <img src="../images/system_flowchart.png" alt="전체 시스템 연동 흐름도" style="max-height: 100%; max-width: 100%; object-fit: contain;">
         </div>
       </div>
       <div class="slide-footer">
